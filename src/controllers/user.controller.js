@@ -40,4 +40,28 @@ module.exports = {
       });
     });
   },
+  requestOTP(req, res) {
+    res.send('User request OTP.');
+  },
+  verifyOTP(req, res) {
+    res.send('User verify OTP.');
+  },
+  createCategory(req, res) {
+    res.send('User create category.');
+  },
+  deleteCategory(req, res) {
+    res.send('User delete category.');
+  },
+  createUnit(req, res) {
+    res.send('User unit measurement.');
+  },
+  deleteUnit(req, res) {
+    res.send('User delete unit measurement.');
+  },
+  createStore(req, res) {
+    res.send('User create store.');
+  },
+  deleteStore(req, res) {
+    res.send('User delete store.');
+  },
 };
