@@ -3,7 +3,7 @@
 const { faker } = require('@faker-js/faker');
 const _ = require('lodash');
 
-const { Product, Note, User } = require('../../models/index.js');
+const { Product, Note } = require('../../models/index.js');
 const mongoConnect = require('./mongo-connect.js');
 const { mongoUrl } = require('../../config/index.js');
 const { promiseResolver } = require('../../utils/helpers.js');
@@ -11,12 +11,17 @@ const { promiseResolver } = require('../../utils/helpers.js');
 faker.seed(42);
 
 // Test user.
-const userId = '64abad8c17ad1dd176b7df40';
+const userId = '64af52faec89e883a2a0a567';
 const categories = ['food', 'beverage', 'vegetables', 'dairy', 'meat', 'fruit'];
 const units = ['g', 'kg', 'ml', 'l', 'pcs'];
 const stores = ['Alfamart', 'Indomaret', 'Soen Swalayan'];
 const maxImageAmount = 5;
 const maxCategoryAmount = 3;
+
+const productAmountArg =
+  process.argv[2] !== undefined ? parseInt(process.argv[2], 10) : 5;
+const noteAmountArg =
+  process.argv[3] !== undefined ? parseInt(process.argv[3], 10) : 5;
 
 async function createProducts(amount) {
   const products = [];
@@ -33,7 +38,10 @@ async function createProducts(amount) {
       description: faker.commerce.productDescription(),
       images: Array(imageAmount)
         .fill()
-        .map(() => faker.image.urlLoremFlickr({ category: 'food' })),
+        .map((item, index) => ({
+          path: faker.image.urlLoremFlickr({ category: 'food' }),
+          fileName: `image-${index}`,
+        })),
       categories: Array(categoryAmount)
         .fill()
         .map(() => _.sample(categories)),
@@ -124,22 +132,11 @@ async function noteSeeder(amount, products) {
 async function startSeeder(productAmount, noteAmount) {
   const dbConnection = mongoConnect(mongoUrl);
 
-  /* ======================= Products ======================= */
-
   const products = await productSeeder(productAmount);
 
-  console.log(
-    '🚀 ~ file: mongo-seeder.js:118 ~ startSeeder ~ products:',
-    products,
-  );
-
-  /* ======================= Notes ======================= */
-
-  const notes = await noteSeeder(noteAmount, products);
-
-  console.log('🚀 ~ file: mongo-seeder.js:124 ~ startSeeder ~ notes:', notes);
+  await noteSeeder(noteAmount, products);
 
   dbConnection.close();
 }
 
-startSeeder(5, 2);
+startSeeder(productAmountArg, noteAmountArg);

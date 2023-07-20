@@ -6,15 +6,30 @@ const { Schema, model } = mongoose;
 const userSchema = new Schema({
   email: { type: String, required: true, unique: true },
   categories: {
-    type: [String],
-    default: ['food', 'beverage', 'vegetables', 'dairy', 'meat', 'fruit'],
+    type: [{ name: String }],
+    default: [
+      { name: 'food' },
+      { name: 'beverage' },
+      { name: 'vegetables' },
+      { name: 'dairy' },
+      { name: 'meat' },
+      { name: 'fruit' },
+    ],
   },
   units: {
-    type: [String],
-    default: ['g', 'kg', 'ml', 'l', 'pcs'],
+    type: [{ name: String }],
+    default: [
+      { name: 'g' },
+      { name: 'kg' },
+      { name: 'ml' },
+      { name: 'l' },
+      { name: 'pcs' },
+    ],
   },
-  stores: [String],
-  otp: String,
+  stores: {
+    type: [{ name: String }],
+    default: [{ name: 'Alfamart' }, { name: 'Indomaret' }],
+  },
 });
 
 userSchema.plugin(passportLocalMongoose);

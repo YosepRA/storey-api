@@ -7,7 +7,7 @@ const router = express.Router();
 
 /* ======================= Routes ======================= */
 
-router.get('/', homeController.index);
+router.get('/test', homeController.test);
 
 router.get('/protected', userMiddleware.isLoggedIn, homeController.protected);
 

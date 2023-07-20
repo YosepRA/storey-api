@@ -6,7 +6,12 @@ const { Schema, model } = mongoose;
 const productSchema = new Schema({
   name: { type: String, required: true },
   description: String,
-  images: [String],
+  images: [
+    {
+      path: String,
+      fileName: String,
+    },
+  ],
   categories: [String],
   price: { type: Number, required: true },
   netto: { type: Number, required: true },

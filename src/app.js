@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const express = require('express');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const logger = require('morgan');
 
 const config = require('./config/index.js');
@@ -17,6 +18,10 @@ const {
 const app = express();
 
 const port = config.port || 3000;
+
+/* ======================= Database Connection ======================= */
+
+mongoConnect(config.mongoUrl);
 
 let sessionSecretKey = config.sessionSecret;
 
@@ -34,11 +39,8 @@ const sessionConfig = {
   cookie: {
     maxAge: 10 * 24 * 60 * 60 * 1000,
   },
+  store: new MongoStore({ mongoUrl: config.mongoUrl }),
 };
-
-/* ======================= Database Connection ======================= */
-
-mongoConnect(config.mongoUrl);
 
 /* ======================= Middlewares ======================= */
 
@@ -57,6 +59,7 @@ app.use(passport.session());
 
 app.use('/', homeRouter);
 app.use('/api/v1/user', userRouter);
+app.use('/api/v1/products', productRouter);
 
 app.listen(port, () => {
   console.log(`Server is listening on port ${port} ...`);
