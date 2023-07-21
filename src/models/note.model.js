@@ -7,7 +7,7 @@ const noteSchema = new Schema({
   description: String,
   products: [{ type: Schema.Types.ObjectId, ref: 'Product' }], // Reference from Product data.
   price: Number, // Price aggregation based on product list.
-  author: { type: Schema.Types.ObjectId, ref: 'User' },
+  author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 });
 
 const Note = model('Note', noteSchema);

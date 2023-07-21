@@ -19,7 +19,7 @@ const productSchema = new Schema({
   pricePerUnit: { type: Number, required: true }, // Calculate on client-side.
   store: String, // Also add to user's store list.
   pinned: Boolean, // Default to false.
-  author: { type: Schema.Types.ObjectId, ref: 'User' },
+  author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   created: Date,
 });
 
