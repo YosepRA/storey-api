@@ -60,6 +60,7 @@ app.use(passport.session());
 app.use('/', homeRouter);
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/products', productRouter);
+app.use('/api/v1/notes', noteRouter);
 
 app.listen(port, () => {
   console.log(`Server is listening on port ${port} ...`);

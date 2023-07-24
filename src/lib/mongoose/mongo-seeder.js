@@ -85,20 +85,30 @@ async function productSeeder(amount) {
 
 async function createNotes(amount, products) {
   const notes = [];
-  const maxProductAmount = products.length;
+  const maxProductAmount = Math.min(products.length, 10);
 
   for (let n = 0; n < amount; n += 1) {
     const productAmount = Math.floor(Math.random() * maxProductAmount) + 1;
     const productList = Array(productAmount)
       .fill()
-      .map(() => _.sample(products));
+      .map(() => ({
+        product: _.sample(products),
+        amount: faker.number.int({ min: 1, max: 10 }),
+      }));
 
     const newNote = {
       title: faker.commerce.productName(),
       description: faker.commerce.productDescription(),
-      products: productList.map((product) => product._id),
-      price: productList.reduce((prev, next) => prev + next.price, 0),
+      products: productList.map((item) => ({
+        product: item.product._id,
+        amount: item.amount,
+      })),
+      price: productList.reduce(
+        (prev, next) => prev + next.product.price * next.amount,
+        0,
+      ),
       author: userId,
+      created: faker.date.recent({ days: 10 }),
     };
 
     notes.push(newNote);
