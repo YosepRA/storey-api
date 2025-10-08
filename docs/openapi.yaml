@@ -8,6 +8,8 @@ info:
     options, and plan your shopping beforehand.
 
 paths:
+  ### ======================== Products ======================== ###
+
   /products:
     get:
       summary: Get a list of products.
@@ -67,7 +69,7 @@ paths:
                     $ref: '#/components/schemas/ResponseStatus'
                   data:
                     $ref: '#/components/schemas/Product'
-    put:
+    patch:
       summary: Edit a product details.
       tags:
         - Product
@@ -107,7 +109,7 @@ paths:
                     $ref: '#/components/schemas/Product'
 
   /products/{id}/price:
-    put:
+    patch:
       summary: Change product price.
       tags:
         - Product
@@ -148,6 +150,138 @@ paths:
                       netto: 80.00
                       unit: g
                       pricePerUnit: 37.50
+
+  ### ======================== Images ======================== ###
+
+  /image:
+    post:
+      summary: Upload new images to cloud storage.
+      tags:
+        - Image
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                images:
+                  type: array
+                  description: 'Array of image files. Supported formats: PNG, JPEG, WebP. Maximum 5 files per request.'
+                  items:
+                    type: string
+                    format: binary
+                  minItems: 1
+                  maxItems: 5
+            encoding:
+              images:
+                contentType: image/png, image/jpeg, image/webp
+      responses:
+        '200':
+          description: Successful image upload. Returns an array of uploaded images public ID and URL.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/ResponseStatus'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Image'
+
+    delete:
+      summary: Delete images from cloud storage.
+      tags:
+        - Image
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Image'
+              description: An array of images that are about to be deleted.
+      responses:
+        '204':
+          description: Successful image deletion.
+
+  ### ======================== User ======================== ###
+
+  /user/register:
+    post:
+      summary: Register a new user.
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegisterInput'
+      responses:
+        '200':
+          description: Successful user registration. Returns basic user information and establish a login session.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/ResponseStatus'
+                  data:
+                    type: object
+                    properties:
+                      username:
+                        type: string
+                    example:
+                      username: JohnDoe
+
+  /user/login:
+    post:
+      summary: User login.
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLoginInput'
+      responses:
+        '200':
+          description: Successful user login. Returns basic user information and establish a login session.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/ResponseStatus'
+                  data:
+                    type: object
+                    properties:
+                      username:
+                        type: string
+                    example:
+                      username: JohnDoe
+
+  /user/logout:
+    get:
+      summary: User logout.
+      tags:
+        - User
+      responses:
+        '204':
+          description: Successful user logout.
+
+  /user/categories:
+    post:
+      summary: Create a new category to user's category list.
+      tags:
+        - User
+      requestBody:
+        content:
+          text/plain:
+            example: ml
 
 components:
   schemas:
@@ -193,8 +327,8 @@ components:
         name: Indomie Goreng
         description: The best instant fried noodle in Indonesia.
         images:
-          - fileName: 'path-to-image.png'
-            path: 'https://photo.com/path-to-image.png'
+          - publicId: public_id
+            url: https://photo.com/path-to-image.png
         categories:
           - food
         price: 3000
@@ -311,23 +445,69 @@ components:
         stores:
           $ref: '#/components/schemas/Stores'
       example:
-        email: user@mail.com
+        _id: 507f1f77bcf86cd799439011
+        email: johndoe@mail.com
         username: JohnDoe
         hash: hash_result
         salt: salt_result
+        categories:
+          - food
+          - beverage
+          - vegetable
+          - dairy
+          - meat
+          - fruit
+        units:
+        stores:
+          - type: object
+            properties:
+              name:
+                type: string
+              address:
+                type: string
+            example:
+              name: Indomaret Nglegok
+              address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
+    UserRegisterInput:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        username:
+          type: string
+        password:
+          type: string
+        passwordRepeat:
+          type: string
+      example:
+        email: johndoe@mail.com
+        username: JohnDoe
+        password: account_password
+        passwordRepeat: account_password
+    UserLoginInput:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      example:
+        username: JohnDoe
+        password: account_password`
 
     ### ======================== General ======================== ###
 
     Image:
       type: object
       properties:
-        fileName:
+        publicId:
           type: string
-        path:
+        url:
           type: string
       example:
-        fileName: 'path-to-image.png'
-        path: 'https://photo.com/path-to-image.png'
+        publicId: public_id
+        url: https://photo.com/path-to-image.png
     Categories:
       type: array
       description: An array of product category tags.
@@ -335,13 +515,13 @@ components:
       items:
         type: string
         description: A default product categories.
-        enum:
-          - food
-          - beverage
-          - vegetable
-          - dairy
-          - meat
-          - fruit
+      example:
+        - food
+        - beverage
+        - vegetable
+        - dairy
+        - meat
+        - fruit
     Units:
       type: array
       description: An array of product measuring units.
@@ -349,6 +529,12 @@ components:
       uniqueItems: true
       items:
         $ref: '#/components/schemas/Unit'
+      example:
+        - g
+        - kg
+        - ml
+        - l
+        - pcs
     Unit:
       type: string
       description: The default list of measuring units.
