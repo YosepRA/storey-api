@@ -278,10 +278,135 @@ paths:
       summary: Create a new category to user's category list.
       tags:
         - User
+        - Category
       requestBody:
         content:
           text/plain:
-            example: ml
+            example: food
+      responses:
+        '201':
+          description: Successful category creation.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/ResponseStatus'
+                  data:
+                    $ref: '#/components/schemas/Category'
+
+  /user/categories/{id}:
+    parameters:
+      - $ref: '#/components/parameters/idParam'
+
+    patch:
+      summary: Change category data and apply it to all products.
+      tags:
+        - User
+        - Category
+      requestBody:
+        content:
+          text/plain:
+            example: food
+      responses:
+        '204':
+          description: Successful category name change.
+
+    delete:
+      summary: Delete a category and remove it from all products.
+      tags:
+        - User
+        - Category
+      responses:
+        '204':
+          description: Successful category deletion.
+
+  /user/unit:
+    post:
+      summary: Create a new unit measurement.
+      tags:
+        - User
+        - Unit Measurement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/UnitInput'
+                - required:
+                    - name
+                    - abbreviation
+      responses:
+        '201':
+          description: Successful unit creation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unit'
+
+  /user/unit/{id}:
+    parameters:
+      - $ref: '#/components/parameters/idParam'
+
+    patch:
+      summary: Change unit measurement data and apply it to all products.
+      tags:
+        - User
+        - Unit Measurement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnitInput'
+      responses:
+        '200':
+          description: Successful unit measurement changes.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/ResponseStatus'
+                  data:
+                    $ref: '#/components/schemas/Unit'
+
+    delete:
+      summary: Delete unit measurement and remove it from all products.
+      tags:
+        - User
+        - Unit Measurement
+      responses:
+        '204':
+          description: Successful unit measurement deletion.
+
+  /user/store:
+    post:
+      summary: Create a new store data.
+      tags:
+        - User
+        - Store
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/StoreInput'
+                - required:
+                    - name
+      responses:
+        '201':
+          description: Successful store creation.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/ResponseStatus'
+                  data:
+                    $ref: '#/components/schemas/Store'
 
 components:
   schemas:
@@ -330,12 +455,17 @@ components:
           - publicId: public_id
             url: https://photo.com/path-to-image.png
         categories:
-          - food
+          - _id: 507f1f77bcf86cd799439011
+            name: food
         price: 3000
         netto: 80.00
-        unit: g
+        unit:
+          _id: 507f1f77bcf86cd799439011
+          name: gram
+          abbreviation: g
         pricePerUnit: 37.50
         store:
+          _id: 507f1f77bcf86cd799439011
           name: Indomaret Nglegok
           address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
         pinned: true,
@@ -383,10 +513,14 @@ components:
               - fileName: 'path-to-image.png'
                 path: 'https://photo.com/path-to-image.png'
             categories:
-              - food
+              - _id: 507f1f77bcf86cd799439011
+                name: food
             price: 3000
             netto: 80.00
-            unit: g
+            unit:
+              _id: 507f1f77bcf86cd799439011
+              name: gram
+              abbreviation: g
             pricePerUnit: 37.50
             store:
               name: Indomaret Nglegok
@@ -404,7 +538,10 @@ components:
               - food
             price: 3000
             netto: 80.00
-            unit: g
+            unit:
+              _id: 507f1f77bcf86cd799439011
+              name: gram
+              abbreviation: g
             pricePerUnit: 37.50
             store:
               name: Indomaret Nglegok
@@ -451,23 +588,15 @@ components:
         hash: hash_result
         salt: salt_result
         categories:
-          - food
-          - beverage
-          - vegetable
-          - dairy
-          - meat
-          - fruit
+          - _id: 507f1f77bcf86cd799439011
+            name: food
+          - _id: 507f1f77bcf86cd799439012
+            name: beverage
         units:
         stores:
-          - type: object
-            properties:
-              name:
-                type: string
-              address:
-                type: string
-            example:
-              name: Indomaret Nglegok
-              address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
+          - _id: 507f1f77bcf86cd799439011
+            name: Indomaret Nglegok
+            address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
     UserRegisterInput:
       type: object
       properties:
@@ -513,15 +642,22 @@ components:
       description: An array of product category tags.
       uniqueItems: true
       items:
-        type: string
-        description: A default product categories.
+        $ref: '#/components/schemas/Category'
       example:
-        - food
-        - beverage
-        - vegetable
-        - dairy
-        - meat
-        - fruit
+        - _id: 507f1f77bcf86cd799439011
+          name: food
+        - _id: 507f1f77bcf86cd799439012
+          name: beverage
+    Category:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+      example:
+        _id: 507f1f77bcf86cd799439011
+        name: food
     Units:
       type: array
       description: An array of product measuring units.
@@ -530,21 +666,52 @@ components:
       items:
         $ref: '#/components/schemas/Unit'
       example:
-        - g
-        - kg
-        - ml
-        - l
-        - pcs
+        - _id: 507f1f77bcf86cd799439011
+          name: gram
+          abbreviation: g
+        - _id: 507f1f77bcf86cd799439012
+          name: liter
+          abbreviation: l
     Unit:
-      type: string
+      type: object
       description: The default list of measuring units.
-      enum:
-        - g
-        - kg
-        - ml
-        - l
-        - pcs
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+      example:
+        _id: 507f1f77bcf86cd799439011
+        name: gram
+        abbreviation: g
+    UnitInput:
+      type: object
+      properties:
+        name:
+          type: string
+        abbreviation:
+          type: string
+      example:
+        name: gram
+        abbreviation: g
     Store:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        address:
+          type: string
+      example:
+        _id: 507f1f77bcf86cd799439011
+        name: Indomaret Nglegok
+        address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
+    Stores:
+      type: array
+      items:
+        $ref: '#/components/schemas/Store'
+    StoreInput:
       type: object
       properties:
         name:
@@ -554,10 +721,6 @@ components:
       example:
         name: Indomaret Nglegok
         address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
-    Stores:
-      type: array
-      items:
-        $ref: '#/components/schemas/Store'
     Page:
       type: integer
       minimum: 1
