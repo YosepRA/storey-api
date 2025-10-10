@@ -25,7 +25,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProductListWithPageResponse'
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/ResponseStatus'
+                  data:
+                    $ref: '#/components/schemas/ProductListWithPageResponse'
     post:
       summary: Create a new product.
       tags:
@@ -151,6 +156,30 @@ paths:
                       unit: g
                       pricePerUnit: 37.50
 
+  ### ======================== Notes ======================== ###
+
+  /notes:
+    get:
+      summary: Get a list of notes.
+      tags:
+        - Notes
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/sortParam'
+      responses:
+        '200':
+          description: Successful notes fetch. Returns a list of notes with pagination information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/ResponseStatus'
+                  data:
+                    $ref: '#/components/schemas/NoteListWithPageResponse'
+
   ### ======================== Images ======================== ###
 
   /image:
@@ -189,7 +218,6 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Image'
-
     delete:
       summary: Delete images from cloud storage.
       tags:
@@ -312,7 +340,6 @@ paths:
       responses:
         '204':
           description: Successful category name change.
-
     delete:
       summary: Delete a category and remove it from all products.
       tags:
@@ -371,7 +398,6 @@ paths:
                     $ref: '#/components/schemas/ResponseStatus'
                   data:
                     $ref: '#/components/schemas/Unit'
-
     delete:
       summary: Delete unit measurement and remove it from all products.
       tags:
@@ -407,6 +433,41 @@ paths:
                     $ref: '#/components/schemas/ResponseStatus'
                   data:
                     $ref: '#/components/schemas/Store'
+
+  /user/store/{id}:
+    parameters:
+      - $ref: '#/components/parameters/idParam'
+
+    patch:
+      summary: Change store data and apply it to all products.
+      tags:
+        - User
+        - Store
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreInput'
+      responses:
+        '200':
+          description: Successful store data changes.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/ResponseStatus'
+                  data:
+                    $ref: '#/components/schemas/Store'
+    delete:
+      summary: Delete a store data and remove it from all products.
+      tags:
+        - User
+        - Store
+      responses:
+        '204':
+          description: Successful store deletion.
 
 components:
   schemas:
@@ -555,6 +616,138 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/Product'
+
+    ### ======================== Note ======================== ###
+
+    Note:
+      type: object
+      properties:
+        _id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                $ref: '#/components/schemas/Product'
+              amount:
+                type: integer
+        price:
+          type: number
+          format: float
+        author:
+          $ref: '#/components/schemas/User'
+        createdAt:
+          type: string
+          format: date-time
+      example:
+        _id: 507f1f77bcf86cd799439011
+        title: Saturday Night
+        description: >
+          The boys are coming to visit tonight. It would be nice to cook them a good
+          pasta with Parmesan cheese.
+        products:
+          - product:
+              _id: 507f1f77bcf86cd799439011
+              name: La Fonte Spaghetti 450gr Pasta
+              description: La Fonte Spaghetti 450gr Pasta
+              images:
+                - publicId: public_id
+                  url: https://photo.com/path-to-image.png
+              categories:
+                - _id: 507f1f77bcf86cd799439011
+                  name: food
+              price: 17500
+              netto: 450.00
+              unit:
+                _id: 507f1f77bcf86cd799439011
+                name: gram
+                abbreviation: g
+              pricePerUnit: 38.89
+              store:
+                _id: 507f1f77bcf86cd799439011
+                name: Indomaret Nglegok
+                address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
+              pinned: true,
+              author:
+                username: 'JohnDoe'
+              createdAt: 2025-09-12T03:57:00.600Z
+            amount: 2
+          - product:
+              _id: 507f1f77bcf86cd799439012
+              name: Del Monte Spaghetti Sauce 330GR
+              description: Del Monte Spaghetti Sauce 330GR
+              images:
+                - publicId: public_id
+                  url: https://photo.com/path-to-image.png
+              categories:
+                - _id: 507f1f77bcf86cd799439011
+                  name: food
+                - _id: 507f1f77bcf86cd799439012
+                  name: sauce
+              price: 27250
+              netto: 330.00
+              unit:
+                _id: 507f1f77bcf86cd799439011
+                name: gram
+                abbreviation: g
+              pricePerUnit: 82.58
+              store:
+                _id: 507f1f77bcf86cd799439011
+                name: Indomaret Nglegok
+                address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
+              pinned: true,
+              author:
+                username: 'JohnDoe'
+              createdAt: 2025-09-12T03:57:00.600Z
+            amount: 3
+          - product:
+              _id: 507f1f77bcf86cd799439013
+              name: Keju Parmesan NZ Anchor 800GR
+              description: Keju Parmesan NZ Anchor 800GR
+              images:
+                - publicId: public_id
+                  url: https://photo.com/path-to-image.png
+              categories:
+                - _id: 507f1f77bcf86cd799439011
+                  name: food
+                - _id: 507f1f77bcf86cd799439013
+                  name: cheese
+              price: 297990
+              netto: 800.00
+              unit:
+                _id: 507f1f77bcf86cd799439011
+                name: gram
+                abbreviation: g
+              pricePerUnit: 372.49
+              store:
+                _id: 507f1f77bcf86cd799439011
+                name: Indomaret Nglegok
+                address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
+              pinned: true,
+              author:
+                username: 'JohnDoe'
+              createdAt: 2025-09-12T03:57:00.600Z
+            amount: 1
+        price: 414740
+        author:
+          _id: 507f1f77bcf86cd799439011
+          username: JohnDoe
+        createdAt: 2025-09-13T03:57:00.600Z
+    NoteListWithPageResponse:
+      allOf:
+        - $ref: '#/components/schemas/PaginatedResponse'
+        - type: object
+          properties:
+            docs:
+              type: array
+              items:
+                $ref: '#/components/schemas/Note'
 
     ### ======================== User ======================== ###
 
