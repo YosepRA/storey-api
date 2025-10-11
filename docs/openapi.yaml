@@ -64,7 +64,9 @@ paths:
         - Product
       responses:
         '200':
-          description: Returns a product details based on given product ID.
+          description: >
+            Successful product details fetch. Returns a product details based 
+            on given product ID.
           content:
             application/json:
               schema:
@@ -86,7 +88,7 @@ paths:
               $ref: '#/components/schemas/EditProductInput'
       responses:
         '200':
-          description: Returns the edited product.
+          description: Successful product edit. Returns the edited product.
           content:
             application/json:
               schema:
@@ -162,7 +164,7 @@ paths:
     get:
       summary: Get a list of notes.
       tags:
-        - Notes
+        - Note
       parameters:
         - $ref: '#/components/parameters/pageParam'
         - $ref: '#/components/parameters/limitParam'
@@ -179,6 +181,83 @@ paths:
                     $ref: '#/components/schemas/ResponseStatus'
                   data:
                     $ref: '#/components/schemas/NoteListWithPageResponse'
+    post:
+      summary: Create a new note.
+      tags:
+        - Note
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/NoteInput'
+                - required:
+                    - title
+                    - products
+                    - price
+      responses:
+        '201':
+          description: Successful note creation. Returns the newly created note.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/ResponseStatus'
+                  data:
+                    $ref: '#/components/schemas/Note'
+
+  /notes/{id}:
+    parameters:
+      - $ref: '#/components/parameters/idParam'
+
+    get:
+      summary: Get a note details.
+      tags:
+        - Note
+      responses:
+        '200':
+          description: >
+            Successful note details fetch. Returns a note's details based on
+            given ID.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/ResponseStatus'
+                  data:
+                    $ref: '#/components/schemas/Note'
+    patch:
+      summary: Edit a note details.
+      tags:
+        - Note
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoteInput'
+      responses:
+        '200':
+          description: Successful note edit. Returns the edited note.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/ResponseStatus'
+                  data:
+                    $ref: '#/components/schemas/Note'
+    delete:
+      summary: Delete a note.
+      tags:
+        - Note
+      responses:
+        '204':
+          description: Successful note deletion.
 
   ### ======================== Images ======================== ###
 
@@ -508,6 +587,9 @@ components:
         createdAt:
           type: string
           format: date-time
+        lastUpdatedAt:
+          type: string
+          format: date-time
       example:
         _id: 507f1f77bcf86cd799439011
         name: Indomie Goreng
@@ -533,6 +615,7 @@ components:
         author:
           username: 'JohnDoe'
         createdAt: 2025-09-12T03:57:00.600Z
+        lastUpdatedAt: 2025-09-12T03:57:00.600Z
     ProductInputBase:
       type: object
       properties:
@@ -645,6 +728,9 @@ components:
         createdAt:
           type: string
           format: date-time
+        lastUpdatedAt:
+          type: string
+          format: date-time
       example:
         _id: 507f1f77bcf86cd799439011
         title: Saturday Night
@@ -677,6 +763,7 @@ components:
               author:
                 username: 'JohnDoe'
               createdAt: 2025-09-12T03:57:00.600Z
+              lastUpdatedAt: 2025-09-12T03:57:00.600Z
             amount: 2
           - product:
               _id: 507f1f77bcf86cd799439012
@@ -705,6 +792,7 @@ components:
               author:
                 username: 'JohnDoe'
               createdAt: 2025-09-12T03:57:00.600Z
+              lastUpdatedAt: 2025-09-12T03:57:00.600Z
             amount: 3
           - product:
               _id: 507f1f77bcf86cd799439013
@@ -733,12 +821,14 @@ components:
               author:
                 username: 'JohnDoe'
               createdAt: 2025-09-12T03:57:00.600Z
+              lastUpdatedAt: 2025-09-12T03:57:00.600Z
             amount: 1
         price: 414740
         author:
           _id: 507f1f77bcf86cd799439011
           username: JohnDoe
         createdAt: 2025-09-13T03:57:00.600Z
+        lastUpdatedAt: 2025-09-13T03:57:00.600Z
     NoteListWithPageResponse:
       allOf:
         - $ref: '#/components/schemas/PaginatedResponse'
@@ -748,6 +838,117 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/Note'
+    NoteInput:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                $ref: '#/components/schemas/Product'
+              amount:
+                type: integer
+        price:
+          type: number
+          format: float
+      example:
+        title: Saturday Night
+        description: >
+          The boys are coming to visit tonight. It would be nice to cook them a good
+          pasta with Parmesan cheese.
+        products:
+          - product:
+              _id: 507f1f77bcf86cd799439011
+              name: La Fonte Spaghetti 450gr Pasta
+              description: La Fonte Spaghetti 450gr Pasta
+              images:
+                - publicId: public_id
+                  url: https://photo.com/path-to-image.png
+              categories:
+                - _id: 507f1f77bcf86cd799439011
+                  name: food
+              price: 17500
+              netto: 450.00
+              unit:
+                _id: 507f1f77bcf86cd799439011
+                name: gram
+                abbreviation: g
+              pricePerUnit: 38.89
+              store:
+                _id: 507f1f77bcf86cd799439011
+                name: Indomaret Nglegok
+                address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
+              pinned: true,
+              author:
+                username: 'JohnDoe'
+              createdAt: 2025-09-12T03:57:00.600Z
+              lastUpdatedAt: 2025-09-12T03:57:00.600Z
+            amount: 2
+          - product:
+              _id: 507f1f77bcf86cd799439012
+              name: Del Monte Spaghetti Sauce 330GR
+              description: Del Monte Spaghetti Sauce 330GR
+              images:
+                - publicId: public_id
+                  url: https://photo.com/path-to-image.png
+              categories:
+                - _id: 507f1f77bcf86cd799439011
+                  name: food
+                - _id: 507f1f77bcf86cd799439012
+                  name: sauce
+              price: 27250
+              netto: 330.00
+              unit:
+                _id: 507f1f77bcf86cd799439011
+                name: gram
+                abbreviation: g
+              pricePerUnit: 82.58
+              store:
+                _id: 507f1f77bcf86cd799439011
+                name: Indomaret Nglegok
+                address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
+              pinned: true,
+              author:
+                username: 'JohnDoe'
+              createdAt: 2025-09-12T03:57:00.600Z
+              lastUpdatedAt: 2025-09-12T03:57:00.600Z
+            amount: 3
+          - product:
+              _id: 507f1f77bcf86cd799439013
+              name: Keju Parmesan NZ Anchor 800GR
+              description: Keju Parmesan NZ Anchor 800GR
+              images:
+                - publicId: public_id
+                  url: https://photo.com/path-to-image.png
+              categories:
+                - _id: 507f1f77bcf86cd799439011
+                  name: food
+                - _id: 507f1f77bcf86cd799439013
+                  name: cheese
+              price: 297990
+              netto: 800.00
+              unit:
+                _id: 507f1f77bcf86cd799439011
+                name: gram
+                abbreviation: g
+              pricePerUnit: 372.49
+              store:
+                _id: 507f1f77bcf86cd799439011
+                name: Indomaret Nglegok
+                address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
+              pinned: true,
+              author:
+                username: 'JohnDoe'
+              createdAt: 2025-09-12T03:57:00.600Z
+              lastUpdatedAt: 2025-09-12T03:57:00.600Z
+            amount: 1
+        price: 414740
 
     ### ======================== User ======================== ###
 
