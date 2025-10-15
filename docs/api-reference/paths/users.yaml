@@ -1,0 +1,233 @@
+paths:
+  /user/register:
+    post:
+      summary: Register a new user.
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/users.yaml#/UserRegisterInput'
+      responses:
+        '200':
+          description: Successful user registration. Returns basic user information and establish a login session.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '../components/schemas/common.yaml#/ResponseStatus'
+                  data:
+                    type: object
+                    properties:
+                      username:
+                        type: string
+                    example:
+                      username: JohnDoe
+
+  /user/login:
+    post:
+      summary: User login.
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/users.yaml#/UserLoginInput'
+      responses:
+        '200':
+          description: Successful user login. Returns basic user information and establish a login session.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '../components/schemas/common.yaml#/ResponseStatus'
+                  data:
+                    type: object
+                    properties:
+                      username:
+                        type: string
+                    example:
+                      username: JohnDoe
+
+  /user/logout:
+    get:
+      summary: User logout.
+      tags:
+        - User
+      responses:
+        '204':
+          description: Successful user logout.
+
+  /user/categories:
+    post:
+      summary: Create a new category to user's category list.
+      tags:
+        - User
+        - Category
+      requestBody:
+        content:
+          text/plain:
+            example: food
+      responses:
+        '201':
+          description: Successful category creation.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '../components/schemas/common.yaml#/ResponseStatus'
+                  data:
+                    $ref: '../components/schemas/common.yaml#/Category'
+
+  /user/categories/{id}:
+    parameters:
+      - $ref: '../components/parameters.yaml#/idParam'
+
+    patch:
+      summary: Change category data and apply it to all products.
+      tags:
+        - User
+        - Category
+      requestBody:
+        content:
+          text/plain:
+            example: food
+      responses:
+        '204':
+          description: Successful category name change.
+    delete:
+      summary: Delete a category and remove it from all products.
+      tags:
+        - User
+        - Category
+      responses:
+        '204':
+          description: Successful category deletion.
+
+  /user/unit:
+    post:
+      summary: Create a new unit measurement.
+      tags:
+        - User
+        - Unit Measurement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '../components/schemas/common.yaml#/UnitInput'
+                - required:
+                    - name
+                    - abbreviation
+      responses:
+        '201':
+          description: Successful unit creation.
+          content:
+            application/json:
+              schema:
+                $ref: '../components/schemas/common.yaml#/Unit'
+
+  /user/unit/{id}:
+    parameters:
+      - $ref: '../components/parameters.yaml#/idParam'
+
+    patch:
+      summary: Change unit measurement data and apply it to all products.
+      tags:
+        - User
+        - Unit Measurement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/common.yaml#/UnitInput'
+      responses:
+        '200':
+          description: Successful unit measurement changes.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '../components/schemas/common.yaml#/ResponseStatus'
+                  data:
+                    $ref: '../components/schemas/common.yaml#/Unit'
+    delete:
+      summary: Delete unit measurement and remove it from all products.
+      tags:
+        - User
+        - Unit Measurement
+      responses:
+        '204':
+          description: Successful unit measurement deletion.
+
+  /user/store:
+    post:
+      summary: Create a new store data.
+      tags:
+        - User
+        - Store
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '../components/schemas/common.yaml#/StoreInput'
+                - required:
+                    - name
+      responses:
+        '201':
+          description: Successful store creation.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '../components/schemas/common.yaml#/ResponseStatus'
+                  data:
+                    $ref: '../components/schemas/common.yaml#/Store'
+
+  /user/store/{id}:
+    parameters:
+      - $ref: '../components/parameters.yaml#/idParam'
+
+    patch:
+      summary: Change store data and apply it to all products.
+      tags:
+        - User
+        - Store
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/common.yaml#/StoreInput'
+      responses:
+        '200':
+          description: Successful store data changes.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '../components/schemas/common.yaml#/ResponseStatus'
+                  data:
+                    $ref: '../components/schemas/common.yaml#/Store'
+    delete:
+      summary: Delete a store data and remove it from all products.
+      tags:
+        - User
+        - Store
+      responses:
+        '204':
+          description: Successful store deletion.

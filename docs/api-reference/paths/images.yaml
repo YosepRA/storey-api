@@ -1,0 +1,52 @@
+paths:
+  /image:
+    post:
+      summary: Upload new images to cloud storage.
+      tags:
+        - Image
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                images:
+                  type: array
+                  description: 'Array of image files. Supported formats: PNG, JPEG, WebP. Maximum 5 files per request.'
+                  items:
+                    type: string
+                    format: binary
+                  minItems: 1
+                  maxItems: 5
+            encoding:
+              images:
+                contentType: image/png, image/jpeg, image/webp
+      responses:
+        '200':
+          description: Successful image upload. Returns an array of uploaded images public ID and URL.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '../components/schemas/common.yaml#/ResponseStatus'
+                  data:
+                    type: array
+                    items:
+                      $ref: '../components/schemas/common.yaml#/Image'
+    delete:
+      summary: Delete images from cloud storage.
+      tags:
+        - Image
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '../components/schemas/common.yaml#/Image'
+              description: An array of images that are about to be deleted.
+      responses:
+        '204':
+          description: Successful image deletion.

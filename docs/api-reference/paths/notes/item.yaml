@@ -1,0 +1,51 @@
+paths:
+  /notes/{id}:
+    parameters:
+      - $ref: '../../components/parameters.yaml#/idParam'
+
+    get:
+      summary: Get a note details.
+      tags:
+        - Note
+      responses:
+        '200':
+          description: >
+            Successful note details fetch. Returns a note's details based on
+            given ID.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '../../components/schemas/common.yaml#/ResponseStatus'
+                  data:
+                    $ref: '../../components/schemas/notes.yaml#/Note'
+    patch:
+      summary: Edit a note details.
+      tags:
+        - Note
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '../../components/schemas/notes.yaml#/NoteInput'
+      responses:
+        '200':
+          description: Successful note edit. Returns the edited note.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '../../components/schemas/common.yaml#/ResponseStatus'
+                  data:
+                    $ref: '../../components/schemas/notes.yaml#/Note'
+    delete:
+      summary: Delete a note.
+      tags:
+        - Note
+      responses:
+        '204':
+          description: Successful note deletion.

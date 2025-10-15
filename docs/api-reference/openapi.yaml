@@ -1,0 +1,58 @@
+openapi: 3.0.4
+
+info:
+  $ref: './shared/info.yaml#/info'
+
+paths:
+  ### ======================== Products ======================== ###
+
+  /products:
+    $ref: './paths/products/collection.yaml'
+
+  /products/{id}:
+    $ref: './paths/products/item.yaml#/paths/~1products~1{id}'
+
+  /products/{id}/price:
+    $ref: './paths/products/item.yaml#/paths/~1products~1{id}~1price'
+
+  ### ======================== Notes ======================== ###
+
+  /notes:
+    $ref: './paths/notes/collection.yaml#/paths/~1notes'
+
+  /notes/{id}:
+    $ref: './paths/notes/item.yaml#/paths/~1notes~1{id}'
+
+  ### ======================== Images ======================== ###
+
+  /image:
+    $ref: './paths/images.yaml#/paths/~1image'
+
+  ### ======================== User ======================== ###
+
+  /user/register:
+    $ref: './paths/users.yaml#/paths/~1user~1register'
+
+  /user/login:
+    $ref: './paths/users.yaml#/paths/~1user~1login'
+
+  /user/logout:
+    $ref: './paths/users.yaml#/paths/~1user~1logout'
+
+  /user/categories:
+    $ref: './paths/users.yaml#/paths/~1user~1categories'
+
+  /user/categories/{id}:
+    $ref: './paths/users.yaml#/paths/~1user~1categories~1{id}'
+
+  /user/unit:
+    $ref: './paths/users.yaml#/paths/~1user~1unit'
+
+  /user/unit/{id}:
+    $ref: './paths/users.yaml#/paths/~1user~1unit~1{id}'
+
+  /user/store:
+    $ref: './paths/users.yaml#/paths/~1user~1store'
+
+  /user/store/{id}:
+    $ref: './paths/users.yaml#/paths/~1user~1store~1{id}'

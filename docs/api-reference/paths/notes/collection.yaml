@@ -1,0 +1,48 @@
+paths:
+  /notes:
+    get:
+      summary: Get a list of notes.
+      tags:
+        - Note
+      parameters:
+        - $ref: '../../components/parameters.yaml#/pageParam'
+        - $ref: '../../components/parameters.yaml#/limitParam'
+        - $ref: '../../components/parameters.yaml#/sortParam'
+      responses:
+        '200':
+          description: Successful notes fetch. Returns a list of notes with pagination information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '../../components/schemas/common.yaml#/ResponseStatus'
+                  data:
+                    $ref: '../../components/schemas/notes.yaml#/NoteListWithPageResponse'
+    post:
+      summary: Create a new note.
+      tags:
+        - Note
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '../../components/schemas/notes.yaml#/NoteInput'
+                - required:
+                    - title
+                    - products
+                    - price
+      responses:
+        '201':
+          description: Successful note creation. Returns the newly created note.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '../../components/schemas/common.yaml#/ResponseStatus'
+                  data:
+                    $ref: '../../components/schemas/notes.yaml#/Note'

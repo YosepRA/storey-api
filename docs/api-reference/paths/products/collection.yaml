@@ -1,0 +1,49 @@
+get:
+  summary: Get a list of products.
+  tags:
+    - Product
+  parameters:
+    - $ref: '../../components/parameters.yaml#/pageParam'
+    - $ref: '../../components/parameters.yaml#/limitParam'
+    - $ref: '../../components/parameters.yaml#/sortParam'
+  responses:
+    '200':
+      description: Returns a list of products.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                $ref: '../../components/schemas/common.yaml#/ResponseStatus'
+              data:
+                $ref: '../../components/schemas/products.yaml#/ProductListWithPageResponse'
+post:
+  summary: Create a new product.
+  tags:
+    - Product
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          allOf:
+            - $ref: '../../components/schemas/products.yaml#/ProductInput'
+            - required:
+                - name
+                - price
+                - netto
+                - unit
+                - pricePerUnit
+  responses:
+    '201':
+      description: Returns the newly created product.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                $ref: '../../components/schemas/common.yaml#/ResponseStatus'
+              data:
+                $ref: '../../components/schemas/products.yaml#/Product'
