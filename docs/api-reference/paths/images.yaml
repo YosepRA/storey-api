@@ -30,11 +30,11 @@ paths:
                 type: object
                 properties:
                   status:
-                    $ref: '../components/schemas/common.yaml#/ResponseStatus'
+                    $ref: '../components/schemas.yaml#/components/schemas/ResponseStatus'
                   data:
                     type: array
                     items:
-                      $ref: '../components/schemas/common.yaml#/Image'
+                      $ref: '../components/schemas.yaml#/components/schemas/Image'
     delete:
       summary: Delete images from cloud storage.
       tags:
@@ -45,7 +45,7 @@ paths:
             schema:
               type: array
               items:
-                $ref: '../components/schemas/common.yaml#/Image'
+                $ref: '../components/schemas.yaml#/components/schemas/Image'
               description: An array of images that are about to be deleted.
       responses:
         '204':

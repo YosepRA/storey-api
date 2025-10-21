@@ -1,7 +1,7 @@
 paths:
   /products/{id}:
     parameters:
-      - $ref: '../../components/parameters.yaml#/idParam'
+      - $ref: '../../components/parameters.yaml#/components/parameters/idParam'
 
     get:
       summary: Get a product details.
@@ -18,9 +18,9 @@ paths:
                 type: object
                 properties:
                   status:
-                    $ref: '../../components/schemas/common.yaml#/ResponseStatus'
+                    $ref: '../../components/schemas.yaml#/components/schemas/ResponseStatus'
                   data:
-                    $ref: '../../components/schemas/products.yaml#/Product'
+                    $ref: '../../components/schemas.yaml#/components/schemas/Product'
     patch:
       summary: Edit a product details.
       tags:
@@ -30,7 +30,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '../../components/schemas/products.yaml#/ProductInput'
+              $ref: '../../components/schemas.yaml#/components/schemas/ProductInput'
       responses:
         '200':
           description: Successful product edit. Returns the edited product.
@@ -40,9 +40,9 @@ paths:
                 type: object
                 properties:
                   status:
-                    $ref: '../../components/schemas/common.yaml#/ResponseStatus'
+                    $ref: '../../components/schemas.yaml#/components/schemas/ResponseStatus'
                   data:
-                    $ref: '../../components/schemas/products.yaml#/Product'
+                    $ref: '../../components/schemas.yaml#/components/schemas/Product'
     delete:
       summary: Delete a product.
       tags:
@@ -56,9 +56,9 @@ paths:
                 type: object
                 properties:
                   status:
-                    $ref: ../../components/schemas/common.yaml#/ResponseStatus
+                    $ref: ../../components/schemas.yaml#/components/schemas/ResponseStatus
                   data:
-                    $ref: '../../components/schemas/products.yaml#/Product'
+                    $ref: '../../components/schemas.yaml#/components/schemas/Product'
 
   /products/{id}/price:
     patch:
@@ -66,7 +66,7 @@ paths:
       tags:
         - Product
       parameters:
-        - $ref: '../../components/parameters.yaml#/idParam'
+        - $ref: '../../components/parameters.yaml#/components/parameters/idParam'
       requestBody:
         required: true
         content:
@@ -85,7 +85,7 @@ paths:
                 type: object
                 properties:
                   status:
-                    $ref: ../../components/schemas/common.yaml#/ResponseStatus
+                    $ref: ../../components/schemas.yaml#/components/schemas/ResponseStatus
                   data:
                     type: object
                     properties:

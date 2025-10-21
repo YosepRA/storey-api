@@ -1,7 +1,7 @@
 paths:
   /notes/{id}:
     parameters:
-      - $ref: '../../components/parameters.yaml#/idParam'
+      - $ref: '../../components/parameters.yaml#/components/parameters/idParam'
 
     get:
       summary: Get a note details.
@@ -18,9 +18,9 @@ paths:
                 type: object
                 properties:
                   status:
-                    $ref: '../../components/schemas/common.yaml#/ResponseStatus'
+                    $ref: '../../components/schemas.yaml#/components/schemas/ResponseStatus'
                   data:
-                    $ref: '../../components/schemas/notes.yaml#/Note'
+                    $ref: '../../components/schemas.yaml#/components/schemas/Note'
     patch:
       summary: Edit a note details.
       tags:
@@ -29,7 +29,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '../../components/schemas/notes.yaml#/NoteInput'
+              $ref: '../../components/schemas.yaml#/components/schemas/NoteInput'
       responses:
         '200':
           description: Successful note edit. Returns the edited note.
@@ -39,9 +39,9 @@ paths:
                 type: object
                 properties:
                   status:
-                    $ref: '../../components/schemas/common.yaml#/ResponseStatus'
+                    $ref: '../../components/schemas.yaml#/components/schemas/ResponseStatus'
                   data:
-                    $ref: '../../components/schemas/notes.yaml#/Note'
+                    $ref: '../../components/schemas.yaml#/components/schemas/Note'
     delete:
       summary: Delete a note.
       tags:

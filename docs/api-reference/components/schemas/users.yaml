@@ -1,66 +1,68 @@
-User:
-  type: object
-  properties:
-    _id:
-      type: string
-      readOnly: true
-    email:
-      type: string
-      format: email
-    username:
-      type: string
-    hash:
-      type: string
-      writeOnly: true
-    salt:
-      type: string
-      writeOnly: true
-    categories:
-      $ref: './common.yaml#/Categories'
-    units:
-      $ref: './common.yaml#/Units'
-    stores:
-      $ref: './common.yaml#/Stores'
-  example:
-    _id: 507f1f77bcf86cd799439011
-    email: johndoe@mail.com
-    username: JohnDoe
-    hash: hash_result
-    salt: salt_result
-    categories:
-      - _id: 507f1f77bcf86cd799439011
-        name: food
-      - _id: 507f1f77bcf86cd799439012
-        name: beverage
-    units:
-    stores:
-      - _id: 507f1f77bcf86cd799439011
-        name: Indomaret Nglegok
-        address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
-UserRegisterInput:
-  type: object
-  properties:
-    email:
-      type: string
-      format: email
-    username:
-      type: string
-    password:
-      type: string
-    passwordRepeat:
-      type: string
-  example:
-    email: johndoe@mail.com
-    username: JohnDoe
-    password: account_password
-    passwordRepeat: account_password
-UserLoginInput:
-  type: object
-  properties:
-    username:
-      type: string
-    password:
-      type: string
-  example:
-    username: JohnDoe
-    password: account_password`
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          readOnly: true
+        email:
+          type: string
+          format: email
+        username:
+          type: string
+        hash:
+          type: string
+          writeOnly: true
+        salt:
+          type: string
+          writeOnly: true
+        categories:
+          $ref: './common.yaml#/Categories'
+        units:
+          $ref: './common.yaml#/Units'
+        stores:
+          $ref: './common.yaml#/Stores'
+      example:
+        _id: 507f1f77bcf86cd799439011
+        email: johndoe@mail.com
+        username: JohnDoe
+        hash: hash_result
+        salt: salt_result
+        categories:
+          - _id: 507f1f77bcf86cd799439011
+            name: food
+          - _id: 507f1f77bcf86cd799439012
+            name: beverage
+        units:
+        stores:
+          - _id: 507f1f77bcf86cd799439011
+            name: Indomaret Nglegok
+            address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
+    UserRegisterInput:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        username:
+          type: string
+        password:
+          type: string
+        passwordRepeat:
+          type: string
+      example:
+        email: johndoe@mail.com
+        username: JohnDoe
+        password: account_password
+        passwordRepeat: account_password
+    UserLoginInput:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      example:
+        username: JohnDoe
+        password: account_password`

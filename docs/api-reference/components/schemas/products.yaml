@@ -1,118 +1,140 @@
-Product:
-  type: object
-  properties:
-    _id:
-      type: string
-    name:
-      type: string
-    description:
-      type: string
-    images:
-      type: array
-      items:
-        $ref: './common.yaml#/Image'
-    categories:
-      $ref: './common.yaml#/Categories'
-    price:
-      type: number
-    netto:
-      type: number
-      format: float
-    unit:
-      $ref: './common.yaml#/Unit'
-    pricePerUnit:
-      type: number
-      format: float
-    store:
-      $ref: './common.yaml#/Store'
-    pinned:
-      type: boolean
-      default: false
-    author:
-      $ref: './users.yaml#/User'
-    createdAt:
-      type: string
-      format: date-time
-    lastUpdatedAt:
-      type: string
-      format: date-time
-  example:
-    _id: 507f1f77bcf86cd799439011
-    name: Indomie Goreng
-    description: The best instant fried noodle in Indonesia.
-    images:
-      - publicId: public_id
-        url: https://photo.com/path-to-image.png
-    categories:
-      - _id: 507f1f77bcf86cd799439011
-        name: food
-    price: 3000
-    netto: 80.00
-    unit:
-      _id: 507f1f77bcf86cd799439011
-      name: gram
-      abbreviation: g
-    pricePerUnit: 37.50
-    store:
-      _id: 507f1f77bcf86cd799439011
-      name: Indomaret Nglegok
-      address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
-    pinned: true,
-    author:
-      username: 'JohnDoe'
-    createdAt: 2025-09-12T03:57:00.600Z
-    lastUpdatedAt: 2025-09-12T03:57:00.600Z
-ProductInput:
-  type: object
-  properties:
-    name:
-      type: string
-    description:
-      type: string
-    images:
-      type: array
-      items:
-        $ref: './common.yaml#/Image'
-    categories:
-      $ref: './common.yaml#/Categories'
-    price:
-      type: number
-    netto:
-      type: number
-      format: float
-    unit:
-      $ref: './common.yaml#/Unit'
-    pricePerUnit:
-      type: number
-      format: float
-    store:
-      $ref: './common.yaml#/Store'
-  example:
-    name: Indomie Goreng
-    description: The best instant fried noodle in Indonesia.
-    images:
-      - fileName: 'path-to-image.png'
-        path: 'https://photo.com/path-to-image.png'
-    categories:
-      - _id: 507f1f77bcf86cd799439011
-        name: food
-    price: 3000
-    netto: 80.00
-    unit:
-      _id: 507f1f77bcf86cd799439011
-      name: gram
-      abbreviation: g
-    pricePerUnit: 37.50
-    store:
-      _id: 507f1f77bcf86cd799439011
-      name: Indomaret Nglegok
-      address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
-ProductListWithPageResponse:
-  allOf:
-    - $ref: './common.yaml#/PaginatedResponse'
-    - type: object
+components:
+  schemas:
+    Product:
+      type: object
       properties:
-        docs:
+        _id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        images:
           type: array
           items:
-            $ref: '#/Product'
+            $ref: './common.yaml#/Image'
+        categories:
+          $ref: './common.yaml#/Categories'
+          # type: array
+          # description: An array of product category tags.
+          # uniqueItems: true
+          # items:
+          #   $ref: './common.yaml#/Category'
+          # example:
+          #   - _id: 507f1f77bcf86cd799439011
+          #     name: food
+          #   - _id: 507f1f77bcf86cd799439012
+          #     name: beverage
+        price:
+          type: number
+        netto:
+          type: number
+          format: float
+        unit:
+          $ref: './common.yaml#/Unit'
+        pricePerUnit:
+          type: number
+          format: float
+        store:
+          $ref: './common.yaml#/Store'
+        pinned:
+          type: boolean
+          default: false
+        author:
+          $ref: './users.yaml#/User'
+        createdAt:
+          type: string
+          format: date-time
+        lastUpdatedAt:
+          type: string
+          format: date-time
+      example:
+        _id: 507f1f77bcf86cd799439011
+        name: Indomie Goreng
+        description: The best instant fried noodle in Indonesia.
+        images:
+          - publicId: public_id
+            url: https://photo.com/path-to-image.png
+        categories:
+          - _id: 507f1f77bcf86cd799439011
+            name: food
+        price: 3000
+        netto: 80.00
+        unit:
+          _id: 507f1f77bcf86cd799439011
+          name: gram
+          abbreviation: g
+        pricePerUnit: 37.50
+        store:
+          _id: 507f1f77bcf86cd799439011
+          name: Indomaret Nglegok
+          address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
+        pinned: true,
+        author:
+          username: 'JohnDoe'
+        createdAt: 2025-09-12T03:57:00.600Z
+        lastUpdatedAt: 2025-09-12T03:57:00.600Z
+    ProductInput:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        images:
+          type: array
+          items:
+            $ref: './common.yaml#/Image'
+        categories:
+          $ref: './common.yaml#/Categories' ############################
+          # type: array
+          # description: An array of product category tags.
+          # uniqueItems: true
+          # items:
+          #   $ref: './common.yaml#/Category'
+          # example:
+          #   - _id: 507f1f77bcf86cd799439011
+          #     name: food
+          #   - _id: 507f1f77bcf86cd799439012
+          #     name: beverage
+        price:
+          type: number
+        netto:
+          type: number
+          format: float
+        unit:
+          $ref: './common.yaml#/Unit'
+        pricePerUnit:
+          type: number
+          format: float
+        store:
+          $ref: './common.yaml#/Store'
+      example:
+        name: Indomie Goreng
+        description: The best instant fried noodle in Indonesia.
+        images:
+          - fileName: 'path-to-image.png'
+            path: 'https://photo.com/path-to-image.png'
+        categories:
+          - _id: 507f1f77bcf86cd799439011
+            name: food
+        price: 3000
+        netto: 80.00
+        unit:
+          _id: 507f1f77bcf86cd799439011
+          name: gram
+          abbreviation: g
+        pricePerUnit: 37.50
+        store:
+          _id: 507f1f77bcf86cd799439011
+          name: Indomaret Nglegok
+          address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
+    ProductListWithPageResponse:
+      allOf:
+        - $ref: './common.yaml#/PaginatedResponse'
+        - type: object
+          properties:
+            docs:
+              type: array
+              items:
+                $ref: '#/Product'

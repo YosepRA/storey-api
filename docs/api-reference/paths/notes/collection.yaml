@@ -5,9 +5,9 @@ paths:
       tags:
         - Note
       parameters:
-        - $ref: '../../components/parameters.yaml#/pageParam'
-        - $ref: '../../components/parameters.yaml#/limitParam'
-        - $ref: '../../components/parameters.yaml#/sortParam'
+        - $ref: '../../components/parameters.yaml#/components/parameters/pageParam'
+        - $ref: '../../components/parameters.yaml#/components/parameters/limitParam'
+        - $ref: '../../components/parameters.yaml#/components/parameters/sortParam'
       responses:
         '200':
           description: Successful notes fetch. Returns a list of notes with pagination information.
@@ -17,9 +17,9 @@ paths:
                 type: object
                 properties:
                   status:
-                    $ref: '../../components/schemas/common.yaml#/ResponseStatus'
+                    $ref: '../../components/schemas.yaml#/components/schemas/ResponseStatus'
                   data:
-                    $ref: '../../components/schemas/notes.yaml#/NoteListWithPageResponse'
+                    $ref: '../../components/schemas.yaml#/components/schemas/NoteListWithPageResponse'
     post:
       summary: Create a new note.
       tags:
@@ -29,7 +29,7 @@ paths:
           application/json:
             schema:
               allOf:
-                - $ref: '../../components/schemas/notes.yaml#/NoteInput'
+                - $ref: '../../components/schemas.yaml#/components/schemas/NoteInput'
                 - required:
                     - title
                     - products
@@ -43,6 +43,6 @@ paths:
                 type: object
                 properties:
                   status:
-                    $ref: '../../components/schemas/common.yaml#/ResponseStatus'
+                    $ref: '../../components/schemas.yaml#/components/schemas/ResponseStatus'
                   data:
-                    $ref: '../../components/schemas/notes.yaml#/Note'
+                    $ref: '../../components/schemas.yaml#/components/schemas/Note'

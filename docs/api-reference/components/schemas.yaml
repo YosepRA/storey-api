@@ -1,0 +1,577 @@
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/Image'
+        categories:
+          $ref: '#/components/schemas/Categories'
+        price:
+          type: number
+        netto:
+          type: number
+          format: float
+        unit:
+          $ref: '#/components/schemas/Unit'
+        pricePerUnit:
+          type: number
+          format: float
+        store:
+          $ref: '#/components/schemas/Store'
+        pinned:
+          type: boolean
+          default: false
+        author:
+          $ref: '#/components/schemas/User'
+        createdAt:
+          type: string
+          format: date-time
+        lastUpdatedAt:
+          type: string
+          format: date-time
+      example:
+        _id: 507f1f77bcf86cd799439011
+        name: Indomie Goreng
+        description: The best instant fried noodle in Indonesia.
+        images:
+          - publicId: public_id
+            url: https://photo.com/path-to-image.png
+        categories:
+          - _id: 507f1f77bcf86cd799439011
+            name: food
+        price: 3000
+        netto: 80.00
+        unit:
+          _id: 507f1f77bcf86cd799439011
+          name: gram
+          abbreviation: g
+        pricePerUnit: 37.50
+        store:
+          _id: 507f1f77bcf86cd799439011
+          name: Indomaret Nglegok
+          address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
+        pinned: true,
+        author:
+          username: 'JohnDoe'
+        createdAt: 2025-09-12T03:57:00.600Z
+        lastUpdatedAt: 2025-09-12T03:57:00.600Z
+    ProductInput:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/Image'
+        categories:
+          $ref: '#/components/schemas/Categories' ############################
+          # type: array
+          # description: An array of product category tags.
+          # uniqueItems: true
+          # items:
+          #   $ref: '#/components/schemas/Category'
+          # example:
+          #   - _id: 507f1f77bcf86cd799439011
+          #     name: food
+          #   - _id: 507f1f77bcf86cd799439012
+          #     name: beverage
+        price:
+          type: number
+        netto:
+          type: number
+          format: float
+        unit:
+          $ref: '#/components/schemas/Unit'
+        pricePerUnit:
+          type: number
+          format: float
+        store:
+          $ref: '#/components/schemas/Store'
+      example:
+        name: Indomie Goreng
+        description: The best instant fried noodle in Indonesia.
+        images:
+          - fileName: 'path-to-image.png'
+            path: 'https://photo.com/path-to-image.png'
+        categories:
+          - _id: 507f1f77bcf86cd799439011
+            name: food
+        price: 3000
+        netto: 80.00
+        unit:
+          _id: 507f1f77bcf86cd799439011
+          name: gram
+          abbreviation: g
+        pricePerUnit: 37.50
+        store:
+          _id: 507f1f77bcf86cd799439011
+          name: Indomaret Nglegok
+          address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
+    ProductListWithPageResponse:
+      allOf:
+        - $ref: '#/components/schemas/PaginatedResponse'
+        - type: object
+          properties:
+            docs:
+              type: array
+              items:
+                $ref: '#/components/schemas/Product'
+
+    ### ======================== Notes ======================== ###
+
+    Note:
+      type: object
+      properties:
+        _id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                $ref: '#/components/schemas/Product'
+              amount:
+                type: integer
+        price:
+          type: number
+          format: float
+        author:
+          $ref: '#/components/schemas/User'
+        createdAt:
+          type: string
+          format: date-time
+        lastUpdatedAt:
+          type: string
+          format: date-time
+      example:
+        _id: 507f1f77bcf86cd799439011
+        title: Saturday Night
+        description: >
+          The boys are coming to visit tonight. It would be nice to cook them a good
+          pasta with Parmesan cheese.
+        products:
+          - product:
+              _id: 507f1f77bcf86cd799439011
+              name: La Fonte Spaghetti 450gr Pasta
+              description: La Fonte Spaghetti 450gr Pasta
+              images:
+                - publicId: public_id
+                  url: https://photo.com/path-to-image.png
+              categories:
+                - _id: 507f1f77bcf86cd799439011
+                  name: food
+              price: 17500
+              netto: 450.00
+              unit:
+                _id: 507f1f77bcf86cd799439011
+                name: gram
+                abbreviation: g
+              pricePerUnit: 38.89
+              store:
+                _id: 507f1f77bcf86cd799439011
+                name: Indomaret Nglegok
+                address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
+              pinned: true,
+              author:
+                username: 'JohnDoe'
+              createdAt: 2025-09-12T03:57:00.600Z
+              lastUpdatedAt: 2025-09-12T03:57:00.600Z
+            amount: 2
+          - product:
+              _id: 507f1f77bcf86cd799439012
+              name: Del Monte Spaghetti Sauce 330GR
+              description: Del Monte Spaghetti Sauce 330GR
+              images:
+                - publicId: public_id
+                  url: https://photo.com/path-to-image.png
+              categories:
+                - _id: 507f1f77bcf86cd799439011
+                  name: food
+                - _id: 507f1f77bcf86cd799439012
+                  name: sauce
+              price: 27250
+              netto: 330.00
+              unit:
+                _id: 507f1f77bcf86cd799439011
+                name: gram
+                abbreviation: g
+              pricePerUnit: 82.58
+              store:
+                _id: 507f1f77bcf86cd799439011
+                name: Indomaret Nglegok
+                address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
+              pinned: true,
+              author:
+                username: 'JohnDoe'
+              createdAt: 2025-09-12T03:57:00.600Z
+              lastUpdatedAt: 2025-09-12T03:57:00.600Z
+            amount: 3
+          - product:
+              _id: 507f1f77bcf86cd799439013
+              name: Keju Parmesan NZ Anchor 800GR
+              description: Keju Parmesan NZ Anchor 800GR
+              images:
+                - publicId: public_id
+                  url: https://photo.com/path-to-image.png
+              categories:
+                - _id: 507f1f77bcf86cd799439011
+                  name: food
+                - _id: 507f1f77bcf86cd799439013
+                  name: cheese
+              price: 297990
+              netto: 800.00
+              unit:
+                _id: 507f1f77bcf86cd799439011
+                name: gram
+                abbreviation: g
+              pricePerUnit: 372.49
+              store:
+                _id: 507f1f77bcf86cd799439011
+                name: Indomaret Nglegok
+                address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
+              pinned: true,
+              author:
+                username: 'JohnDoe'
+              createdAt: 2025-09-12T03:57:00.600Z
+              lastUpdatedAt: 2025-09-12T03:57:00.600Z
+            amount: 1
+        price: 414740
+        author:
+          _id: 507f1f77bcf86cd799439011
+          username: JohnDoe
+        createdAt: 2025-09-13T03:57:00.600Z
+        lastUpdatedAt: 2025-09-13T03:57:00.600Z
+    NoteListWithPageResponse:
+      allOf:
+        - $ref: '#/components/schemas/PaginatedResponse'
+        - type: object
+          properties:
+            docs:
+              type: array
+              items:
+                $ref: '#/components/schemas/Note'
+    NoteInput:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                $ref: '#/components/schemas/Product'
+              amount:
+                type: integer
+        price:
+          type: number
+          format: float
+      example:
+        title: Saturday Night
+        description: >
+          The boys are coming to visit tonight. It would be nice to cook them a good
+          pasta with Parmesan cheese.
+        products:
+          - product:
+              _id: 507f1f77bcf86cd799439011
+              name: La Fonte Spaghetti 450gr Pasta
+              description: La Fonte Spaghetti 450gr Pasta
+              images:
+                - publicId: public_id
+                  url: https://photo.com/path-to-image.png
+              categories:
+                - _id: 507f1f77bcf86cd799439011
+                  name: food
+              price: 17500
+              netto: 450.00
+              unit:
+                _id: 507f1f77bcf86cd799439011
+                name: gram
+                abbreviation: g
+              pricePerUnit: 38.89
+              store:
+                _id: 507f1f77bcf86cd799439011
+                name: Indomaret Nglegok
+                address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
+              pinned: true,
+              author:
+                username: 'JohnDoe'
+              createdAt: 2025-09-12T03:57:00.600Z
+              lastUpdatedAt: 2025-09-12T03:57:00.600Z
+            amount: 2
+          - product:
+              _id: 507f1f77bcf86cd799439012
+              name: Del Monte Spaghetti Sauce 330GR
+              description: Del Monte Spaghetti Sauce 330GR
+              images:
+                - publicId: public_id
+                  url: https://photo.com/path-to-image.png
+              categories:
+                - _id: 507f1f77bcf86cd799439011
+                  name: food
+                - _id: 507f1f77bcf86cd799439012
+                  name: sauce
+              price: 27250
+              netto: 330.00
+              unit:
+                _id: 507f1f77bcf86cd799439011
+                name: gram
+                abbreviation: g
+              pricePerUnit: 82.58
+              store:
+                _id: 507f1f77bcf86cd799439011
+                name: Indomaret Nglegok
+                address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
+              pinned: true,
+              author:
+                username: 'JohnDoe'
+              createdAt: 2025-09-12T03:57:00.600Z
+              lastUpdatedAt: 2025-09-12T03:57:00.600Z
+            amount: 3
+          - product:
+              _id: 507f1f77bcf86cd799439013
+              name: Keju Parmesan NZ Anchor 800GR
+              description: Keju Parmesan NZ Anchor 800GR
+              images:
+                - publicId: public_id
+                  url: https://photo.com/path-to-image.png
+              categories:
+                - _id: 507f1f77bcf86cd799439011
+                  name: food
+                - _id: 507f1f77bcf86cd799439013
+                  name: cheese
+              price: 297990
+              netto: 800.00
+              unit:
+                _id: 507f1f77bcf86cd799439011
+                name: gram
+                abbreviation: g
+              pricePerUnit: 372.49
+              store:
+                _id: 507f1f77bcf86cd799439011
+                name: Indomaret Nglegok
+                address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
+              pinned: true,
+              author:
+                username: 'JohnDoe'
+              createdAt: 2025-09-12T03:57:00.600Z
+              lastUpdatedAt: 2025-09-12T03:57:00.600Z
+            amount: 1
+        price: 414740
+
+    ### ======================== Users ======================== ###
+
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          readOnly: true
+        email:
+          type: string
+          format: email
+        username:
+          type: string
+        hash:
+          type: string
+          writeOnly: true
+        salt:
+          type: string
+          writeOnly: true
+        categories:
+          $ref: '#/components/schemas/Categories'
+        units:
+          $ref: '#/components/schemas/Units'
+        stores:
+          $ref: '#/components/schemas/Stores'
+      example:
+        _id: 507f1f77bcf86cd799439011
+        email: johndoe@mail.com
+        username: JohnDoe
+        hash: hash_result
+        salt: salt_result
+        categories:
+          - _id: 507f1f77bcf86cd799439011
+            name: food
+          - _id: 507f1f77bcf86cd799439012
+            name: beverage
+        units:
+        stores:
+          - _id: 507f1f77bcf86cd799439011
+            name: Indomaret Nglegok
+            address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
+    UserRegisterInput:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        username:
+          type: string
+        password:
+          type: string
+        passwordRepeat:
+          type: string
+      example:
+        email: johndoe@mail.com
+        username: JohnDoe
+        password: account_password
+        passwordRepeat: account_password
+    UserLoginInput:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      example:
+        username: JohnDoe
+        password: account_password`
+
+    ### ======================== Common ======================== ###
+
+    Image:
+      type: object
+      properties:
+        publicId:
+          type: string
+        url:
+          type: string
+      example:
+        publicId: public_id
+        url: https://photo.com/path-to-image.png
+    Categories:
+      type: array
+      description: An array of product category tags.
+      uniqueItems: true
+      items:
+        $ref: '#/components/schemas/Category'
+      example:
+        - _id: 507f1f77bcf86cd799439011
+          name: food
+        - _id: 507f1f77bcf86cd799439012
+          name: beverage
+    Category:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+      example:
+        _id: 507f1f77bcf86cd799439011
+        name: food
+    Units:
+      type: array
+      description: An array of product measuring units.
+      minItems: 1
+      uniqueItems: true
+      items:
+        $ref: '#/components/schemas/Unit'
+      example:
+        - _id: 507f1f77bcf86cd799439011
+          name: gram
+          abbreviation: g
+        - _id: 507f1f77bcf86cd799439012
+          name: liter
+          abbreviation: l
+    Unit:
+      type: object
+      description: The default list of measuring units.
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+      example:
+        _id: 507f1f77bcf86cd799439011
+        name: gram
+        abbreviation: g
+    UnitInput:
+      type: object
+      properties:
+        name:
+          type: string
+        abbreviation:
+          type: string
+      example:
+        name: gram
+        abbreviation: g
+    Store:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        address:
+          type: string
+      example:
+        _id: 507f1f77bcf86cd799439011
+        name: Indomaret Nglegok
+        address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
+    Stores:
+      type: array
+      items:
+        $ref: '#/components/schemas/Store'
+    StoreInput:
+      type: object
+      properties:
+        name:
+          type: string
+        address:
+          type: string
+      example:
+        name: Indomaret Nglegok
+        address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
+    Page:
+      type: integer
+      minimum: 1
+      default: 1
+      example: 1
+    Limit:
+      type: integer
+      enum:
+        - 10
+        - 25
+        - 50
+      default: 10
+      example: 10
+    PaginatedResponse:
+      type: object
+      properties:
+        docs:
+          type: array
+        page:
+          $ref: '#/components/schemas/Page'
+        limit:
+          $ref: '#/components/schemas/Limit'
+        totalDocs:
+          type: integer
+          example: 120
+    ResponseStatus:
+      type: string
+      enum:
+        - ok
+        - error
+      default: ok

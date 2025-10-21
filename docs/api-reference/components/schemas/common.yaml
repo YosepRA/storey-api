@@ -1,125 +1,127 @@
-Image:
-  type: object
-  properties:
-    publicId:
-      type: string
-    url:
-      type: string
-  example:
-    publicId: public_id
-    url: https://photo.com/path-to-image.png
-Categories:
-  type: array
-  description: An array of product category tags.
-  uniqueItems: true
-  items:
-    $ref: '#/Category'
-  example:
-    - _id: 507f1f77bcf86cd799439011
-      name: food
-    - _id: 507f1f77bcf86cd799439012
-      name: beverage
-Category:
-  type: object
-  properties:
-    _id:
-      type: string
-    name:
-      type: string
-  example:
-    _id: 507f1f77bcf86cd799439011
-    name: food
-Units:
-  type: array
-  description: An array of product measuring units.
-  minItems: 1
-  uniqueItems: true
-  items:
-    $ref: '#/Unit'
-  example:
-    - _id: 507f1f77bcf86cd799439011
-      name: gram
-      abbreviation: g
-    - _id: 507f1f77bcf86cd799439012
-      name: liter
-      abbreviation: l
-Unit:
-  type: object
-  description: The default list of measuring units.
-  properties:
-    _id:
-      type: string
-    name:
-      type: string
-  example:
-    _id: 507f1f77bcf86cd799439011
-    name: gram
-    abbreviation: g
-UnitInput:
-  type: object
-  properties:
-    name:
-      type: string
-    abbreviation:
-      type: string
-  example:
-    name: gram
-    abbreviation: g
-Store:
-  type: object
-  properties:
-    _id:
-      type: string
-    name:
-      type: string
-    address:
-      type: string
-  example:
-    _id: 507f1f77bcf86cd799439011
-    name: Indomaret Nglegok
-    address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
-Stores:
-  type: array
-  items:
-    $ref: '#/Store'
-StoreInput:
-  type: object
-  properties:
-    name:
-      type: string
-    address:
-      type: string
-  example:
-    name: Indomaret Nglegok
-    address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
-Page:
-  type: integer
-  minimum: 1
-  default: 1
-  example: 1
-Limit:
-  type: integer
-  enum:
-    - 10
-    - 25
-    - 50
-  default: 10
-  example: 10
-PaginatedResponse:
-  type: object
-  properties:
-    docs:
+components:
+  schemas:
+    Image:
+      type: object
+      properties:
+        publicId:
+          type: string
+        url:
+          type: string
+      example:
+        publicId: public_id
+        url: https://photo.com/path-to-image.png
+    Categories:
       type: array
-    page:
-      $ref: '#/Page'
-    limit:
-      $ref: '#/Limit'
-    totalDocs:
+      description: An array of product category tags.
+      uniqueItems: true
+      items:
+        $ref: '#/Category'
+      example:
+        - _id: 507f1f77bcf86cd799439011
+          name: food
+        - _id: 507f1f77bcf86cd799439012
+          name: beverage
+    Category:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+      example:
+        _id: 507f1f77bcf86cd799439011
+        name: food
+    Units:
+      type: array
+      description: An array of product measuring units.
+      minItems: 1
+      uniqueItems: true
+      items:
+        $ref: '#/Unit'
+      example:
+        - _id: 507f1f77bcf86cd799439011
+          name: gram
+          abbreviation: g
+        - _id: 507f1f77bcf86cd799439012
+          name: liter
+          abbreviation: l
+    Unit:
+      type: object
+      description: The default list of measuring units.
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+      example:
+        _id: 507f1f77bcf86cd799439011
+        name: gram
+        abbreviation: g
+    UnitInput:
+      type: object
+      properties:
+        name:
+          type: string
+        abbreviation:
+          type: string
+      example:
+        name: gram
+        abbreviation: g
+    Store:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        address:
+          type: string
+      example:
+        _id: 507f1f77bcf86cd799439011
+        name: Indomaret Nglegok
+        address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
+    Stores:
+      type: array
+      items:
+        $ref: '#/Store'
+    StoreInput:
+      type: object
+      properties:
+        name:
+          type: string
+        address:
+          type: string
+      example:
+        name: Indomaret Nglegok
+        address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
+    Page:
       type: integer
-      example: 120
-ResponseStatus:
-  type: string
-  enum:
-    - ok
-    - error
-  default: ok
+      minimum: 1
+      default: 1
+      example: 1
+    Limit:
+      type: integer
+      enum:
+        - 10
+        - 25
+        - 50
+      default: 10
+      example: 10
+    PaginatedResponse:
+      type: object
+      properties:
+        docs:
+          type: array
+        page:
+          $ref: '#/Page'
+        limit:
+          $ref: '#/Limit'
+        totalDocs:
+          type: integer
+          example: 120
+    ResponseStatus:
+      type: string
+      enum:
+        - ok
+        - error
+      default: ok

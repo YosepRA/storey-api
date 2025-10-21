@@ -1,31 +1,33 @@
-pageParam:
-  name: page
-  in: query
-  description: The current page for the requested data list.
-  schema:
-    $ref: './schemas/common.yaml#/Page'
-  required: true
-limitParam:
-  name: limit
-  in: query
-  description: The amount of data per page.
-  schema:
-    $ref: './schemas/common.yaml#/Limit'
-sortParam:
-  name: sort
-  in: query
-  description: Sort key of an item list.
-  schema:
-    type: string
-    enum:
-      - createdAt
-      - -createdAt
-    default: -createdAt
-idParam:
-  name: id
-  in: path
-  description: ID parameter for a specific data.
-  schema:
-    type: string
-    example: 507f1f77bcf86cd799439011
-  required: true
+components:
+  parameters:
+    pageParam:
+      name: page
+      in: query
+      description: The current page for the requested data list.
+      schema:
+        $ref: './schemas.yaml#/components/schemas/Page'
+      required: true
+    limitParam:
+      name: limit
+      in: query
+      description: The amount of data per page.
+      schema:
+        $ref: './schemas.yaml#/components/schemas/Limit'
+    sortParam:
+      name: sort
+      in: query
+      description: Sort key of an item list.
+      schema:
+        type: string
+        enum:
+          - createdAt
+          - -createdAt
+        default: -createdAt
+    idParam:
+      name: id
+      in: path
+      description: ID parameter for a specific data.
+      schema:
+        type: string
+        example: 507f1f77bcf86cd799439011
+      required: true
