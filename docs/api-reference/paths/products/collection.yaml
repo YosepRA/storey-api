@@ -49,3 +49,4 @@ paths:
                     $ref: '../../components/schemas.yaml#/components/schemas/ResponseStatus'
                   data:
                     $ref: '../../components/schemas.yaml#/components/schemas/Product'
+
