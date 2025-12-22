@@ -1,18 +1,20 @@
-# Product Collection
+# Notes Collection
 
-Product collection algorithm designs.
+Notes collection algorithm designs.
+
+This feature is private to each user. Therefore, all of the algorithms below assumes that the user is authorized for these actions.
 
 ---
 
-## Get Product List
+## Get Note List
 
 ```
-GET /products
+GET /notes
 ```
 
 ```mermaid
 flowchart TD
-  getProducts[GET /products request] --> validateParameters[Validate and parse query parameters]
+  getNotes[GET /notes request] --> validateParameters[Validate and parse query parameters]
   validateParameters --> pageParameterCheck[Page parameter?]
   pageParameterCheck -->|Yes| parsePageToInteger[Parse to integer] --> pageIntegerCheck{Valid integer?}
   pageIntegerCheck -->|No| returnInvalidPage[Return 400: Invalid page]
@@ -41,29 +43,3 @@ flowchart TD
   isThereResults -->|Yes| formatPaginatedResponse[Format paginated response]
   formatPaginatedResponse --> returnSuccessfulResponse[Return 200 with product list]
 ```
-
-## Create a New Product
-
-```
-POST /products
-```
-
-```mermaid
-flowchart TD
-  createProducts[POST /products request] --> getRequestBody[Get request body]
-  getRequestBody --> validateRequestBody{"Validate request body (Separate chart)"}
-  validateRequestBody --> constructQuery[Construct query]
-  constructQuery --> executeQuery[Execute insert query]
-  executeQuery --> isQuerySuccessful{Is query successful?}
-  isQuerySuccessful -->|No| returnFailedInsertResponse[Return 500: Failed document insert]
-  isQuerySuccessful -->|Yes| returnSuccessfulResponse[Return 200 with the created product]
-```
-
-```mermaid
----
-title: Create Product Body Validation
----
-flowchart TD
-  pending[TBD...]
-```
-
