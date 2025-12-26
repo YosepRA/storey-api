@@ -41,5 +41,30 @@ flowchart TD
   isQuerySuccessful -->|Yes| isThereResults{Found results?}
   isThereResults -->|No| returnEmptyQuery[Return 200 with empty list]
   isThereResults -->|Yes| formatPaginatedResponse[Format paginated response]
-  formatPaginatedResponse --> returnSuccessfulResponse[Return 200 with product list]
+  formatPaginatedResponse --> returnSuccessfulResponse[Return 200 with note list]
+```
+
+## Create a New Note
+
+```
+POST /notes
+```
+
+```mermaid
+flowchart TD
+  createNotes[POST /notes request] --> getRequestBody[Get request body]
+  getRequestBody --> validateRequestBody{"Validate request body (Separate chart)"}
+  validateRequestBody --> constructQuery[Construct query]
+  constructQuery --> executeQuery[Execute insert query]
+  executeQuery --> isQuerySuccessful{Is query successful?}
+  isQuerySuccessful -->|No| returnFailedInsertResponse[Return 500: Failed document insert]
+  isQuerySuccessful -->|Yes| returnSuccessfulResponse[Return 200 with the created note]
+```
+
+```mermaid
+---
+title: Create Product Body Validation
+---
+flowchart TD
+  pending[TBD...]
 ```

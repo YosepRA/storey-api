@@ -86,7 +86,7 @@ DELETE /products/{id}
 
 ```mermaid
 flowchart TD
-  updateProduct["DELETE /products/{id} request"] --> getIdFromPath[Get product ID from path]
+  deleteProduct["DELETE /products/{id} request"] --> getIdFromPath[Get product ID from path]
   getIdFromPath --> constructQuery[Construct database query]
   constructQuery --> executeQuery[Execute delete query]
   executeQuery --> isQuerySuccessful{Is query successful?}
