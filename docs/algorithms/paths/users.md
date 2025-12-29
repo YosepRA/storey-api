@@ -267,30 +267,34 @@ PATCH /user/store/{id}
 
 ```mermaid
 flowchart TD
-  editUnit["PATCH /user/store/{id}"] --> getIdFromPath[Get category ID from path]
-  getIdFromPath --> getRequestBody[Get new unit name from body]
+  editStore["PATCH /user/store/{id}"] --> getIdFromPath[Get store ID from path]
+  getIdFromPath --> getRequestBody[Get new store data from body]
 
-  getRequestBody --> constructQuery[Construct unit edit query]
-  constructQuery --> executeQuery[Execute unit edit query]
+  getRequestBody --> validateRequestBody{TODO: Store body validation}
+  validateRequestBody -->|Yes| validBody[Valid body]
+
+  validBody --> constructQuery[Construct store edit query]
+
+  constructQuery --> executeQuery[Execute store edit query]
 
   executeQuery --> isQuerySuccessful{Query successful?}
   isQuerySuccessful -->|No| isServerError{Server error?}
   isServerError -->|Yes| returnServerError[Return 500: Server error]
 
-  isQuerySuccessful -->|No| isUnitDoesNotExist{Invalid unit ID?}
-  isUnitDoesNotExist -->|Yes| returnUnitDoesNotExist[Return 404: Unit does not exist]
+  isQuerySuccessful -->|No| isStoreDoesNotExist{Invalid store ID?}
+  isStoreDoesNotExist -->|Yes| returnStoreDoesNotExist[Return 404: Store does not exist]
 
-  isQuerySuccessful -->|No| isUnitDoesNotChange{Unit does not change?}
-  isUnitDoesNotChange -->|Yes| returnUnitAlreadyExist[Return 409: Unit name does not change]
+  isQuerySuccessful -->|No| isStoreDoesNotChange{Store does not change?}
+  isStoreDoesNotChange -->|Yes| returnStoreAlreadyExist[Return 409: Store name does not change]
 
-  isQuerySuccessful -->|Yes| changeExistingProductsUnit
+  isQuerySuccessful -->|Yes| changeExistingProductsStore
 
-  subgraph changeExistingProductsUnit [Change Existing Products Unit]
-    A[TODO: Design existing product unit change]
+  subgraph changeExistingProductsStore [Change Existing Products Store]
+    A[TODO: Design existing product store change]
   end
 
-  changeExistingProductsUnit --> constructResponseData[Construct response data]
-  constructResponseData --> returnSuccessfulQuery[Return 200 with edited unit data]
+  changeExistingProductsStore --> constructResponseData[Construct response data]
+  constructResponseData --> returnSuccessfulQuery[Return 200 with edited store data]
 ```
 
 ## Delete Store
@@ -301,23 +305,23 @@ DELETE /user/store/{id}
 
 ```mermaid
 flowchart TD
-  editUnit["DELETE /user/store{id}"] --> getIdFromPath[Get unit ID from path]
-  getIdFromPath --> constructQuery[Construct unit delete query]
-  constructQuery --> executeQuery[Execute unit delete query]
+  editStore["DELETE /user/store{id}"] --> getIdFromPath[Get store ID from path]
+  getIdFromPath --> constructQuery[Construct store delete query]
+  constructQuery --> executeQuery[Execute store delete query]
 
   executeQuery --> isQuerySuccessful{Query successful?}
   isQuerySuccessful -->|No| isServerError{Server error?}
   isServerError -->|Yes| returnServerError[Return 500: Server error]
 
-  isQuerySuccessful -->|No| isUnitDoesNotExist{Invalid unit ID?}
-  isUnitDoesNotExist -->|Yes| returnUnitDoesNotExist[Return 404: Unit does not exist]
+  isQuerySuccessful -->|No| isStoreDoesNotExist{Invalid store ID?}
+  isStoreDoesNotExist -->|Yes| returnStoreDoesNotExist[Return 404: Store does not exist]
 
-  isQuerySuccessful -->|Yes| deleteUnitFromProducts
+  isQuerySuccessful -->|Yes| deleteStoreFromProducts
 
-  subgraph deleteUnitFromProducts [Delete Unit From Products]
-    A[TODO: Design unit deletion from products]
+  subgraph deleteStoreFromProducts [Delete Store From Products]
+    A[TODO: Design store deletion from products]
   end
 
-  deleteUnitFromProducts --> constructResponseData[Construct response data]
+  deleteStoreFromProducts --> constructResponseData[Construct response data]
   constructResponseData --> returnSuccessfulQuery[Return 204]
 ```
