@@ -18,18 +18,20 @@
       2,
       { "SwitchCase": 1, "ignoredNodes": ["ConditionalExpression"] }
     ],
-    "linebreak-style": ["error", "unix"],
+    "linebreak-style": ["error", "windows"],
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
     "import/extensions": ["error", "ignorePackages"],
+    "import/no-unresolved": "off",
     "prettier/prettier": [
       "error",
       {
         "singleQuote": true,
-        "endOfLine": "lf",
+        "endOfLine": "crlf",
         "arrowParens": "always",
         "trailingComma": "all"
       }
     ]
   }
 }
+
