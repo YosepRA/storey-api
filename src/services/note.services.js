@@ -1,6 +1,7 @@
-const { Product } = require('../models/index.js');
-const { promiseResolver } = require('../utils/helpers.js');
-const error = require('../types/error-code.js');
+const { Product } = require('#models/index.js');
+const { promiseResolver } = require('#utils/helpers.js');
+
+// const error = require('../types/error-code.js');
 
 async function calculateNotePrice(data, res) {
   const productsId = data.map((item) => item.product);
@@ -14,8 +15,8 @@ async function calculateNotePrice(data, res) {
   if (productQueryError) {
     return res.json({
       status: 'error',
-      code: error.serverError.code,
-      message: error.serverError.message,
+      // code: error.serverError.code,
+      // message: error.serverError.message,
     });
   }
 

@@ -41,7 +41,9 @@
     "#controllers/*": "./src/controllers/*",
     "#middlewares/*": "./src/middlewares/*",
     "#lib/*": "./src/lib/*",
-    "#utils/*": "./src/utils/*"
+    "#utils/*": "./src/utils/*",
+    "#services/*": "./src/services/*",
+    "#config/*": "./src/config/*"
   }
 }
 

@@ -1,5 +1,5 @@
-const { User } = require('../models/index.js');
-const { promiseResolver } = require('../utils/helpers.js');
+const { User } = require('#models/index.js');
+const { promiseResolver } = require('#utils/helpers.js');
 
 module.exports = {
   async register(req, res) {

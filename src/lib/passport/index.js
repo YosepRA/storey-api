@@ -1,6 +1,6 @@
 const passport = require('passport');
 
-const { User } = require('../../models/index.js');
+const { User } = require('#models/index.js');
 
 function startPassport() {
   passport.use(User.createStrategy());

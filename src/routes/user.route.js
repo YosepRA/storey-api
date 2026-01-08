@@ -1,8 +1,8 @@
 const express = require('express');
 const passport = require('passport');
 
-const { user: controller } = require('../controllers/index.js');
-const { user: userMiddleware } = require('../middlewares/index.js');
+const { user: controller } = require('#controllers/index.js');
+const { user: userMiddleware } = require('#middlewares/index.js');
 
 const router = express.Router();
 
@@ -14,9 +14,9 @@ router.post('/login', passport.authenticate('local'), controller.login);
 
 router.get('/logout', controller.logout);
 
-router.post('/otp/request', controller.requestOTP);
+// router.post('/otp/request', controller.requestOTP);
 
-router.post('/otp/verify', controller.verifyOTP);
+// router.post('/otp/verify', controller.verifyOTP);
 
 router.post('/category', userMiddleware.isLoggedIn, controller.createCategory);
 

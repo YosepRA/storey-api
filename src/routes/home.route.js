@@ -1,7 +1,7 @@
 const express = require('express');
 
-const { home: homeController } = require('../controllers/index.js');
-const { user: userMiddleware } = require('../middlewares/index.js');
+const { home: homeController } = require('#controllers/index.js');
+const { user: userMiddleware } = require('#middlewares/index.js');
 
 const router = express.Router();
 

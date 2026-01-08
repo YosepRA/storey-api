@@ -5,15 +5,15 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const logger = require('morgan');
 
-const config = require('./config/index.js');
-const mongoConnect = require('./lib/mongoose/mongo-connect.js');
-const startPassport = require('./lib/passport/index.js');
+const config = require('#config/index.js');
+const mongoConnect = require('#lib/mongoose/mongo-connect.js');
+const startPassport = require('#lib/passport/index.js');
 const {
   home: homeRouter,
   product: productRouter,
   note: noteRouter,
   user: userRouter,
-} = require('./routes/index.js');
+} = require('#routes/index.js');
 
 const app = express();
 
@@ -58,9 +58,9 @@ app.use(passport.session());
 /* ========== Routes ========== */
 
 app.use('/', homeRouter);
-app.use('/api/v1/user', userRouter);
-app.use('/api/v1/products', productRouter);
-app.use('/api/v1/notes', noteRouter);
+app.use('/api/user', userRouter);
+app.use('/api/products', productRouter);
+app.use('/api/notes', noteRouter);
 
 app.listen(port, () => {
   console.log(`Server is listening on port ${port} ...`);

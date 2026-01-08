@@ -1,6 +1,7 @@
-const { Product } = require('../models/index.js');
-const { promiseResolver } = require('../utils/helpers.js');
-const error = require('../types/error-code.js');
+const { Product } = require('#models/index.js');
+const { promiseResolver } = require('#utils/helpers.js');
+
+// const error = require('../types/error-code.js');
 
 module.exports = {
   async index(req, res) {
@@ -17,8 +18,8 @@ module.exports = {
     if (queryError) {
       return res.json({
         status: 'error',
-        code: error.serverError.code,
-        message: error.serverError.message,
+        // code: error.serverError.code,
+        // message: error.serverError.message,
       });
     }
 
@@ -41,16 +42,16 @@ module.exports = {
       console.log(queryError);
       return res.json({
         status: 'error',
-        code: error.serverError.code,
-        message: error.serverError.message,
+        // code: error.serverError.code,
+        // message: error.serverError.message,
       });
     }
 
     if (product === null) {
       return res.json({
         status: 'error',
-        code: error.noDataFound.code,
-        message: error.noDataFound.message,
+        // code: error.noDataFound.code,
+        // message: error.noDataFound.message,
       });
     }
 
@@ -71,8 +72,8 @@ module.exports = {
       console.log(createError);
       return res.json({
         status: 'error',
-        code: error.serverError.code,
-        message: error.serverError.message,
+        // code: error.serverError.code,
+        // message: error.serverError.message,
       });
     }
 
@@ -93,16 +94,16 @@ module.exports = {
       console.log(updateError);
       return res.json({
         status: 'error',
-        code: error.serverError.code,
-        message: error.serverError.message,
+        // code: error.serverError.code,
+        // message: error.serverError.message,
       });
     }
 
     if (oldProduct === null) {
       return res.json({
         status: 'error',
-        code: error.noDataFound.code,
-        message: error.noDataFound.message,
+        // code: error.noDataFound.code,
+        // message: error.noDataFound.message,
       });
     }
 
@@ -120,16 +121,16 @@ module.exports = {
       console.log(queryError);
       return res.json({
         status: 'error',
-        code: error.serverError.code,
-        message: error.serverError.message,
+        // code: error.serverError.code,
+        // message: error.serverError.message,
       });
     }
 
     if (product === null) {
       return res.json({
         status: 'error',
-        code: error.noDataFound.code,
-        message: error.noDataFound.message,
+        // code: error.noDataFound.code,
+        // message: error.noDataFound.message,
       });
     }
 
