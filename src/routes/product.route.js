@@ -17,14 +17,14 @@ router.get('/:id', controller.details);
 
 router.post('/', controller.create);
 
-router.put('/:id', controller.update);
+router.patch('/:id', controller.update);
 
-router.put('/:id/price', controller.updatePrice);
+router.patch('/:id/price', controller.updatePrice);
 
 router.delete('/:id', controller.delete);
 
-router.post('/image', controller.uploadImage);
+// router.post('/image', controller.uploadImage);
 
-router.delete('/image', controller.deleteImage);
+// router.delete('/image', controller.deleteImage);
 
 module.exports = router;

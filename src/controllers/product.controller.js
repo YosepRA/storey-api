@@ -7,30 +7,37 @@ module.exports = {
   async index(req, res) {
     const { page, search, sort, cat, store, limit } = req.query;
     const { _id: userId } = req.user;
-    const limitOpt = limit || 15;
+
+    const pageOption = page || 1;
+    const sortOption = sort || '-createdAt';
+    const limitOption = limit || 10;
+
     const query = { author: userId };
-    const options = { page, sort, limit: limitOpt };
+    const paginationOptions = {
+      page: pageOption,
+      sort: sortOption,
+      limit: limitOption,
+    };
 
     const [products, queryError] = await promiseResolver(
-      Product.paginate(query, options),
+      Product.paginate(query, paginationOptions),
     );
 
     if (queryError) {
-      return res.json({
+      return res.status(500).json({
         status: 'error',
-        // code: error.serverError.code,
-        // message: error.serverError.message,
+        message: queryError.message,
       });
     }
 
     return res.json({
       status: 'ok',
-      page,
-      length: products.docs.length,
-      total: products.totalDocs,
-      hasPrevPage: products.hasPrevPage,
-      hasNextPage: products.hasNextPage,
-      data: products.docs,
+      data: {
+        docs: products.docs,
+        page: products.page,
+        limit: products.limit,
+        totalDocs: products.totalDocs,
+      },
     });
   },
   async details(req, res) {
@@ -39,19 +46,16 @@ module.exports = {
     const [product, queryError] = await promiseResolver(Product.findById(id));
 
     if (queryError) {
-      console.log(queryError);
-      return res.json({
+      return res.status(500).json({
         status: 'error',
-        // code: error.serverError.code,
-        // message: error.serverError.message,
+        message: queryError.message,
       });
     }
 
     if (product === null) {
-      return res.json({
+      return res.status(404).json({
         status: 'error',
-        // code: error.noDataFound.code,
-        // message: error.noDataFound.message,
+        message: 'Product not found.',
       });
     }
 
@@ -69,15 +73,13 @@ module.exports = {
     const [product, createError] = await promiseResolver(Product.create(data));
 
     if (createError) {
-      console.log(createError);
-      return res.json({
+      return res.status(500).json({
         status: 'error',
-        // code: error.serverError.code,
-        // message: error.serverError.message,
+        message: 'Product create error.',
       });
     }
 
-    return res.json({
+    return res.status(201).json({
       status: 'ok',
       data: product,
     });
@@ -86,63 +88,72 @@ module.exports = {
     const { id } = req.params;
     const data = req.body;
 
-    const [oldProduct, updateError] = await promiseResolver(
-      Product.findByIdAndUpdate(id, data),
+    const [product, updateError] = await promiseResolver(
+      Product.findByIdAndUpdate(id, data, { new: true }),
     );
 
     if (updateError) {
-      console.log(updateError);
-      return res.json({
+      return res.status(500).json({
         status: 'error',
-        // code: error.serverError.code,
-        // message: error.serverError.message,
+        message: 'Product update error.',
       });
     }
 
-    if (oldProduct === null) {
-      return res.json({
+    if (product === null) {
+      return res.status(404).json({
         status: 'error',
-        // code: error.noDataFound.code,
-        // message: error.noDataFound.message,
+        message: 'Product not found.',
       });
     }
 
     return res.json({
       status: 'ok',
+      data: product,
     });
   },
   async updatePrice(req, res) {
     const { id } = req.params;
     const { price } = req.body;
 
-    const [product, queryError] = await promiseResolver(Product.findById(id));
+    const [product, findError] = await promiseResolver(Product.findById(id));
 
-    if (queryError) {
-      console.log(queryError);
-      return res.json({
+    if (findError) {
+      return res.status(500).json({
         status: 'error',
-        // code: error.serverError.code,
-        // message: error.serverError.message,
+        message: 'Product update price find product error.',
       });
     }
 
     if (product === null) {
-      return res.json({
+      return res.status(404).json({
         status: 'error',
-        // code: error.noDataFound.code,
-        // message: error.noDataFound.message,
+        message: 'Product not found',
       });
     }
 
-    const pricePerUnit = price / product.netto;
+    const pricePerUnit = Math.round((price / product.netto) * 100) / 100;
 
     product.price = price;
     product.pricePerUnit = pricePerUnit;
 
     const [savedProduct, saveError] = await promiseResolver(product.save());
 
+    if (saveError) {
+      return res.status(500).json({
+        status: 'error',
+        message: 'Product update price save product error.',
+      });
+    }
+
     return res.json({
       status: 'ok',
+      data: {
+        _id: savedProduct._id,
+        price: savedProduct.price,
+        netto: savedProduct.netto,
+        unit: savedProduct.unit,
+        pricePerUnit: savedProduct.pricePerUnit,
+      },
     });
   },
   async delete(req, res) {
@@ -152,14 +163,29 @@ module.exports = {
       Product.findByIdAndDelete(id),
     );
 
+    if (deleteError) {
+      return res.status(500).json({
+        status: 'error',
+        message: 'Product delete error.',
+      });
+    }
+
+    if (deletedProduct === null) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Product not found.',
+      });
+    }
+
     return res.json({
       status: 'ok',
+      data: deletedProduct,
     });
   },
-  uploadImage(req, res) {
-    res.send('Product image upload.');
-  },
-  deleteImage(req, res) {
-    res.send('Product image delete.');
-  },
+  // uploadImage(req, res) {
+  //   res.send('Product image upload.');
+  // },
+  // deleteImage(req, res) {
+  //   res.send('Product image delete.');
+  // },
 };

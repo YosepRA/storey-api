@@ -8,19 +8,20 @@ const productSchema = new Schema({
   description: String,
   images: [
     {
-      path: String,
-      fileName: String,
+      publicId: String,
+      url: String,
     },
   ],
-  categories: [String],
+  categories: [{ name: String }],
   price: { type: Number, required: true },
   netto: { type: Number, required: true },
-  unit: { type: String, required: true },
+  unit: { name: String, abbreviation: String },
   pricePerUnit: { type: Number, required: true }, // Calculate on client-side.
-  store: String, // Also add to user's store list.
-  pinned: Boolean, // Default to false.
+  store: { name: String, address: String }, // Also add to user's store list.
+  pinned: { type: Boolean, default: false }, // Default to false.
   author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  created: Date,
+  createdAt: Date,
+  lastUpdatedAt: Date,
 });
 
 productSchema.plugin(mongoosePaginate);

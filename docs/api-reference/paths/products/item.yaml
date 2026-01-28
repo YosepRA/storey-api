@@ -93,6 +93,12 @@ paths:
                         type: string
                       price:
                         type: number
+                        format: float
+                      netto:
+                        type: number
+                        format: float
+                      unit:
+                        $ref: ../../components/schemas.yaml#/components/schemas/Unit
                       pricePerUnit:
                         type: number
                         format: float
@@ -100,5 +106,8 @@ paths:
                       _id: 507f1f77bcf86cd799439011
                       price: 3000
                       netto: 80.00
-                      unit: g
-                      pricePerUnit: 37.50
+                      unit:
+                        _id: 507f1f77bcf86cd799439011
+                        name: gram
+                        abbreviation: g
+                      pricePerUnit: 37.5
