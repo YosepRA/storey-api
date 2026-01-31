@@ -16,12 +16,23 @@ module.exports = {
       });
     }
 
-    return res.json({
-      status: 'ok',
-      data: {
-        username: registeredUser.username,
-      },
+    req.login(registeredUser, (sessionError) => {
+      if (sessionError) {
+        return res.status(500).json({
+          status: 'error',
+          message: 'Session creation error.',
+        });
+      }
+
+      return res.json({
+        status: 'ok',
+        data: {
+          username: registeredUser.username,
+        },
+      });
     });
+
+    return undefined;
   },
   login(req, res) {
     const { username } = req.user;
@@ -33,33 +44,105 @@ module.exports = {
       },
     });
   },
-  async logout(req, res) {
+  logout(req, res) {
     req.logout(() => {
-      res.json({
-        status: 'ok',
-      });
+      res.sendStatus(204);
     });
   },
-  requestOTP(req, res) {
-    res.send('User request OTP.');
+  // requestOTP(req, res) {
+  //   res.send('User request OTP.');
+  // },
+  // verifyOTP(req, res) {
+  //   res.send('User verify OTP.');
+  // },
+  async createCategory(req, res) {
+    const { user, body } = req;
+
+    const category = { name: body };
+
+    /* ======================= Document Save ======================= */
+
+    // user.categories = user.categories.concat(category);
+
+    // const [result, saveError] = await promiseResolver(user.save());
+
+    // if (saveError) {
+    //   return res.status(500).json({
+    //     status: 'error',
+    //     message: 'Category save error.',
+    //   });
+    // }
+
+    // return res.status(201).json({
+    //   status: 'ok',
+    //   data: result,
+    // });
+
+    // /* ======================= Model UpdateOne ======================= */
+
+    // const userFilter = { username: user.username };
+    // const update = { $push: { categories: category } };
+
+    // const [result, updateError] = await promiseResolver(
+    //   User.updateOne(userFilter, update),
+    // );
+
+    // if (updateError) {
+    //   return res.status(500).json({
+    //     status: 'error',
+    //     message: 'User category create error.',
+    //   });
+    // }
+
+    // return res.status(201).json({
+    //   status: 'ok',
+    //   data: result,
+    // });
+
+    // /* ======================= Model findOneAndUpdate ======================= */
+
+    const userFilter = { username: user.username };
+    const update = { $push: { categories: category } };
+    const updateOptions = { projection: { categories: 1 }, new: true };
+
+    const [updatedUser, updateError] = await promiseResolver(
+      User.findOneAndUpdate(userFilter, update, updateOptions),
+    );
+
+    if (updateError) {
+      return res.status(500).json({
+        status: 'error',
+        message: 'User category create error.',
+      });
+    }
+
+    console.log('🚀 ~ updatedUser:', updatedUser);
+
+    return res.status(201).json({
+      status: 'ok',
+      data: updatedUser.categories,
+    });
   },
-  verifyOTP(req, res) {
-    res.send('User verify OTP.');
-  },
-  createCategory(req, res) {
-    res.send('User create category.');
+  updateCategory(req, res) {
+    res.send('User update category.');
   },
   deleteCategory(req, res) {
     res.send('User delete category.');
   },
   createUnit(req, res) {
-    res.send('User unit measurement.');
+    res.send('User create unit measurement.');
+  },
+  updateUnit(req, res) {
+    res.send('User update unit measurement.');
   },
   deleteUnit(req, res) {
     res.send('User delete unit measurement.');
   },
   createStore(req, res) {
     res.send('User create store.');
+  },
+  updateStore(req, res) {
+    res.send('User update store.');
   },
   deleteStore(req, res) {
     res.send('User delete store.');

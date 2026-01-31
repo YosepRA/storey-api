@@ -19,11 +19,11 @@ const userSchema = new Schema({
   units: {
     type: [{ name: String }],
     default: [
-      { name: 'g' },
-      { name: 'kg' },
-      { name: 'ml' },
-      { name: 'l' },
-      { name: 'pcs' },
+      { name: 'gram', abbreviation: 'g' },
+      { name: 'kilogram', abbreviation: 'kg' },
+      { name: 'mililiter', abbreviation: 'ml' },
+      { name: 'liter', abbreviation: 'l' },
+      { name: 'pieces', abbreviation: 'pcs' },
     ],
   },
   stores: {

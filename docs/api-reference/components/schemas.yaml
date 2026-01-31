@@ -52,10 +52,12 @@ components:
         price: 3000
         netto: 80.00
         unit:
+          _id: 507f1f77bcf86cd799439011
           name: gram
           abbreviation: g
         pricePerUnit: 37.50
         store:
+          _id: 507f1f77bcf86cd799439011
           name: Indomaret Nglegok
           address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
         pinned: true,
@@ -111,10 +113,12 @@ components:
         price: 3000
         netto: 80.00
         unit:
+          _id: 507f1f77bcf86cd799439011
           name: gram
           abbreviation: g
         pricePerUnit: 37.50
         store:
+          _id: 507f1f77bcf86cd799439011
           name: Indomaret Nglegok
           address: Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur
     ProductListWithPageResponse:
@@ -416,13 +420,10 @@ components:
           type: string
         password:
           type: string
-        passwordRepeat:
-          type: string
       example:
         email: johndoe@mail.com
         username: JohnDoe
         password: account_password
-        passwordRepeat: account_password
     UserLoginInput:
       type: object
       properties:
