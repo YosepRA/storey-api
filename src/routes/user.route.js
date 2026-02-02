@@ -28,6 +28,7 @@ router.post(
 router.patch(
   '/category/:id',
   userMiddleware.isLoggedIn,
+  express.text(),
   controller.updateCategory,
 );
 

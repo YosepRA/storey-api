@@ -58,52 +58,14 @@ module.exports = {
   async createCategory(req, res) {
     const { user, body } = req;
 
-    const category = { name: body };
-
-    /* ======================= Document Save ======================= */
-
-    // user.categories = user.categories.concat(category);
-
-    // const [result, saveError] = await promiseResolver(user.save());
-
-    // if (saveError) {
-    //   return res.status(500).json({
-    //     status: 'error',
-    //     message: 'Category save error.',
-    //   });
-    // }
-
-    // return res.status(201).json({
-    //   status: 'ok',
-    //   data: result,
-    // });
-
-    // /* ======================= Model UpdateOne ======================= */
-
-    // const userFilter = { username: user.username };
-    // const update = { $push: { categories: category } };
-
-    // const [result, updateError] = await promiseResolver(
-    //   User.updateOne(userFilter, update),
-    // );
-
-    // if (updateError) {
-    //   return res.status(500).json({
-    //     status: 'error',
-    //     message: 'User category create error.',
-    //   });
-    // }
-
-    // return res.status(201).json({
-    //   status: 'ok',
-    //   data: result,
-    // });
-
-    // /* ======================= Model findOneAndUpdate ======================= */
+    const category = { name: body.trim().toLowerCase() };
 
     const userFilter = { username: user.username };
     const update = { $push: { categories: category } };
-    const updateOptions = { projection: { categories: 1 }, new: true };
+    const updateOptions = {
+      projection: { categories: { $slice: -1 } },
+      new: true,
+    };
 
     const [updatedUser, updateError] = await promiseResolver(
       User.findOneAndUpdate(userFilter, update, updateOptions),
@@ -116,19 +78,28 @@ module.exports = {
       });
     }
 
-    console.log('🚀 ~ updatedUser:', updatedUser);
-
     return res.status(201).json({
       status: 'ok',
-      data: updatedUser.categories,
+      data: updatedUser.categories[0],
     });
   },
   updateCategory(req, res) {
-    res.send('User update category.');
+    const {
+      params: { id },
+      user,
+      body,
+    } = req;
+
+    const category = { name: body.trim().toLowerCase() };
+
+    const userFilter = { username: user.username };
+    const update = { $push: { categories: category } };
+    const updateOptions = {
+      projection: { categories: { $slice: -1 } },
+      new: true,
+    };
   },
-  deleteCategory(req, res) {
-    res.send('User delete category.');
-  },
+  deleteCategory(req, res) {},
   createUnit(req, res) {
     res.send('User create unit measurement.');
   },
