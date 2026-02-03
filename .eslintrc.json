@@ -21,6 +21,7 @@
     "linebreak-style": ["error", "windows"],
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
+    "no-underscore-dangle": "off",
     "import/extensions": ["error", "ignorePackages"],
     "import/no-unresolved": "off",
     "prettier/prettier": [

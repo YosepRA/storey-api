@@ -150,17 +150,19 @@ paths:
             schema:
               $ref: '../components/schemas.yaml#/components/schemas/UnitInput'
       responses:
-        '200':
-          description: Successful unit measurement changes.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    $ref: '../components/schemas.yaml#/components/schemas/ResponseStatus'
-                  data:
-                    $ref: '../components/schemas.yaml#/components/schemas/Unit'
+        # '200':
+        #   description: Successful unit measurement changes.
+        #   content:
+        #     application/json:
+        #       schema:
+        #         type: object
+        #         properties:
+        #           status:
+        #             $ref: '../components/schemas.yaml#/components/schemas/ResponseStatus'
+        #           data:
+        #             $ref: '../components/schemas.yaml#/components/schemas/Unit'
+        '204':
+          description: Successful measurement unit changes.
     delete:
       summary: Delete unit measurement and remove it from all products.
       tags:
@@ -212,17 +214,19 @@ paths:
             schema:
               $ref: '../components/schemas.yaml#/components/schemas/StoreInput'
       responses:
-        '200':
+        # '200':
+        #   description: Successful store data changes.
+        #   content:
+        #     application/json:
+        #       schema:
+        #         type: object
+        #         properties:
+        #           status:
+        #             $ref: '../components/schemas.yaml#/components/schemas/ResponseStatus'
+        #           data:
+        #             $ref: '../components/schemas.yaml#/components/schemas/Store'
+        '204':
           description: Successful store data changes.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    $ref: '../components/schemas.yaml#/components/schemas/ResponseStatus'
-                  data:
-                    $ref: '../components/schemas.yaml#/components/schemas/Store'
     delete:
       summary: Delete a store data and remove it from all products.
       tags:

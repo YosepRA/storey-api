@@ -1,3 +1,7 @@
+const {
+  Types: { ObjectId },
+} = require('mongoose');
+
 const { User } = require('#models/index.js');
 const { promiseResolver } = require('#utils/helpers.js');
 
@@ -62,13 +66,13 @@ module.exports = {
 
     const userFilter = { username: user.username };
     const update = { $push: { categories: category } };
-    const updateOptions = {
+    const options = {
       projection: { categories: { $slice: -1 } },
       new: true,
     };
 
     const [updatedUser, updateError] = await promiseResolver(
-      User.findOneAndUpdate(userFilter, update, updateOptions),
+      User.findOneAndUpdate(userFilter, update, options),
     );
 
     if (updateError) {
@@ -83,23 +87,53 @@ module.exports = {
       data: updatedUser.categories[0],
     });
   },
-  updateCategory(req, res) {
+  async updateCategory(req, res) {
     const {
       params: { id },
       user,
       body,
     } = req;
 
-    const category = { name: body.trim().toLowerCase() };
+    const categoryName = body.trim().toLowerCase();
+    const targetCategory = user.categories.find(
+      (cat) => cat._id.toString() === id,
+    );
+
+    targetCategory.name = categoryName;
+
+    const [result, saveError] = await promiseResolver(user.save());
+
+    if (saveError) {
+      return res.status(500).json({
+        status: 'error',
+        message: 'User category update: Save error.',
+      });
+    }
+
+    return res.sendStatus(204);
+  },
+  async deleteCategory(req, res) {
+    const {
+      params: { id },
+      user,
+    } = req;
 
     const userFilter = { username: user.username };
-    const update = { $push: { categories: category } };
-    const updateOptions = {
-      projection: { categories: { $slice: -1 } },
-      new: true,
-    };
+    const update = { $pull: { categories: { _id: new ObjectId(id) } } };
+
+    const [result, updateError] = await promiseResolver(
+      User.findOneAndUpdate(userFilter, update),
+    );
+
+    if (updateError) {
+      return res.status(500).json({
+        status: 'error',
+        message: 'User category delete: Update error.',
+      });
+    }
+
+    return res.sendStatus(204);
   },
-  deleteCategory(req, res) {},
   createUnit(req, res) {
     res.send('User create unit measurement.');
   },
