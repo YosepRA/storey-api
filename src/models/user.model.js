@@ -17,7 +17,7 @@ const userSchema = new Schema({
     ],
   },
   units: {
-    type: [{ name: String }],
+    type: [{ name: String, abbreviation: String }],
     default: [
       { name: 'gram', abbreviation: 'g' },
       { name: 'kilogram', abbreviation: 'kg' },

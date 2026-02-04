@@ -17,4 +17,21 @@ function expirationDate(ms) {
   };
 }
 
-module.exports = { promiseResolver, numberWithCommas, expirationDate };
+function buildArraySetOperation(chunk, body, allowedFields) {
+  const setOperation = {};
+
+  allowedFields.forEach((field) => {
+    if (body[field]) {
+      setOperation[`${chunk}.$.${field}`] = body[field];
+    }
+  });
+
+  return setOperation;
+}
+
+module.exports = {
+  promiseResolver,
+  numberWithCommas,
+  expirationDate,
+  buildArraySetOperation,
+};

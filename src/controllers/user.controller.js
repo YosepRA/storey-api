@@ -3,7 +3,10 @@ const {
 } = require('mongoose');
 
 const { User } = require('#models/index.js');
-const { promiseResolver } = require('#utils/helpers.js');
+const {
+  promiseResolver,
+  buildArraySetOperation,
+} = require('#utils/helpers.js');
 
 module.exports = {
   async register(req, res) {
@@ -95,18 +98,31 @@ module.exports = {
     } = req;
 
     const categoryName = body.trim().toLowerCase();
-    const targetCategory = user.categories.find(
-      (cat) => cat._id.toString() === id,
+    const userCategoryFilter = {
+      username: user.username,
+      'categories._id': id,
+    };
+    const update = {
+      $set: {
+        'categories.$.name': categoryName,
+      },
+    };
+
+    const [result, updateError] = await promiseResolver(
+      User.updateOne(userCategoryFilter, update),
     );
 
-    targetCategory.name = categoryName;
-
-    const [result, saveError] = await promiseResolver(user.save());
-
-    if (saveError) {
+    if (updateError) {
       return res.status(500).json({
         status: 'error',
-        message: 'User category update: Save error.',
+        message: 'User category update: Update error.',
+      });
+    }
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Category not found.',
       });
     }
 
@@ -118,11 +134,14 @@ module.exports = {
       user,
     } = req;
 
-    const userFilter = { username: user.username };
-    const update = { $pull: { categories: { _id: new ObjectId(id) } } };
+    const userCategoryFilter = {
+      username: user.username,
+      'categories._id': id,
+    };
+    const update = { $pull: { categories: { _id: id } } };
 
     const [result, updateError] = await promiseResolver(
-      User.findOneAndUpdate(userFilter, update),
+      User.updateOne(userCategoryFilter, update),
     );
 
     if (updateError) {
@@ -132,16 +151,105 @@ module.exports = {
       });
     }
 
+    if (result.matchedCount === 0) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Category not found.',
+      });
+    }
+
     return res.sendStatus(204);
   },
-  createUnit(req, res) {
-    res.send('User create unit measurement.');
+  async createUnit(req, res) {
+    const { body: unit, user } = req;
+
+    const userFilter = { username: user.username };
+    const update = { $push: { units: unit } };
+    const options = { projection: { units: { $slice: -1 } }, new: true };
+
+    const [result, updateError] = await promiseResolver(
+      User.findOneAndUpdate(userFilter, update, options),
+    );
+
+    if (updateError) {
+      return res.status(500).json({
+        status: 'error',
+        message: 'User unit create: Update error.',
+      });
+    }
+
+    if (result === null) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'User not found.',
+      });
+    }
+
+    return res.status(201).json({
+      status: 'ok',
+      data: result.units[0],
+    });
   },
-  updateUnit(req, res) {
-    res.send('User update unit measurement.');
+  async updateUnit(req, res) {
+    const {
+      params: { id },
+      body: unit,
+      user,
+    } = req;
+
+    const userUnitFilter = { username: user.username, 'units._id': id };
+    const allowedFields = ['name', 'abbreviation'];
+    const setOperation = buildArraySetOperation('units', unit, allowedFields);
+    const update = { $set: setOperation };
+
+    const [result, updateError] = await promiseResolver(
+      User.updateOne(userUnitFilter, update),
+    );
+
+    if (updateError) {
+      return res.status(500).json({
+        status: 'error',
+        message: 'User unit update: Update error',
+      });
+    }
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'User unit is not found.',
+      });
+    }
+
+    return res.sendStatus(204);
   },
-  deleteUnit(req, res) {
-    res.send('User delete unit measurement.');
+  async deleteUnit(req, res) {
+    const {
+      params: { id },
+      user,
+    } = req;
+
+    const userUnitFilter = { username: user.username, 'units._id': id };
+    const update = { $pull: { units: { _id: id } } };
+
+    const [result, updateError] = await promiseResolver(
+      User.updateOne(userUnitFilter, update),
+    );
+
+    if (updateError) {
+      return res.status(500).json({
+        status: 'error',
+        message: 'User unit delete: Update error.',
+      });
+    }
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'User unit is not found.',
+      });
+    }
+
+    return res.sendStatus(204);
   },
   createStore(req, res) {
     res.send('User create store.');

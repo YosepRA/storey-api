@@ -133,7 +133,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '../components/schemas.yaml#/components/schemas/Unit'
+                type: object
+                properties:
+                  status:
+                    $ref: '../components/schemas.yaml#/components/schemas/ResponseStatus'
+                  data:
+                    $ref: '../components/schemas.yaml#/components/schemas/Unit'
 
   /user/unit/{id}:
     parameters:
