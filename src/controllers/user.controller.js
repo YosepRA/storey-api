@@ -122,7 +122,7 @@ module.exports = {
     if (result.matchedCount === 0) {
       return res.status(404).json({
         status: 'error',
-        message: 'Category not found.',
+        message: 'User or category is not found.',
       });
     }
 
@@ -154,7 +154,7 @@ module.exports = {
     if (result.matchedCount === 0) {
       return res.status(404).json({
         status: 'error',
-        message: 'Category not found.',
+        message: 'User or category is not found.',
       });
     }
 
@@ -216,7 +216,7 @@ module.exports = {
     if (result.matchedCount === 0) {
       return res.status(404).json({
         status: 'error',
-        message: 'User unit is not found.',
+        message: 'User or unit is not found.',
       });
     }
 
@@ -245,19 +245,101 @@ module.exports = {
     if (result.matchedCount === 0) {
       return res.status(404).json({
         status: 'error',
-        message: 'User unit is not found.',
+        message: 'User or unit is not found.',
       });
     }
 
     return res.sendStatus(204);
   },
-  createStore(req, res) {
-    res.send('User create store.');
+  async createStore(req, res) {
+    const { body: store, user } = req;
+
+    const userFilter = { username: user.username };
+    const update = { $push: { stores: store } };
+    const options = { projection: { stores: { $slice: -1 } }, new: true };
+
+    const [result, updateError] = await promiseResolver(
+      User.findOneAndUpdate(userFilter, update, options),
+    );
+
+    if (updateError) {
+      return res.status(500).json({
+        status: 'error',
+        message: 'User store create: Update error.',
+      });
+    }
+
+    if (result === null) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'User not found.',
+      });
+    }
+
+    return res.status(201).json({
+      status: 'ok',
+      data: result.stores[0],
+    });
   },
-  updateStore(req, res) {
-    res.send('User update store.');
+  async updateStore(req, res) {
+    const {
+      params: { id },
+      body: store,
+      user,
+    } = req;
+
+    const userStoreFilter = { username: user.username, 'stores._id': id };
+    const allowedFields = ['name', 'address'];
+    const setOperation = buildArraySetOperation('stores', store, allowedFields);
+    const update = { $set: setOperation };
+
+    const [result, updateError] = await promiseResolver(
+      User.updateOne(userStoreFilter, update),
+    );
+
+    if (updateError) {
+      return res.status(500).json({
+        status: 'error',
+        message: 'User store update: Update error.',
+      });
+    }
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'User or store is not found.',
+      });
+    }
+
+    return res.sendStatus(204);
   },
-  deleteStore(req, res) {
-    res.send('User delete store.');
+  async deleteStore(req, res) {
+    const {
+      params: { id },
+      user,
+    } = req;
+
+    const userStoreFilter = { username: user.username, 'stores._id': id };
+    const update = { $pull: { stores: { _id: id } } };
+
+    const [result, updateError] = await promiseResolver(
+      User.updateOne(userStoreFilter, update),
+    );
+
+    if (updateError) {
+      return res.status(500).json({
+        status: 'error',
+        message: 'User store delete: Update error.',
+      });
+    }
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'User or store is not found.',
+      });
+    }
+
+    return res.sendStatus(204);
   },
 };

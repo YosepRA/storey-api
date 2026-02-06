@@ -27,8 +27,19 @@ const userSchema = new Schema({
     ],
   },
   stores: {
-    type: [{ name: String }],
-    default: [{ name: 'Alfamart' }, { name: 'Indomaret' }],
+    type: [{ name: String, address: String }],
+    default: [
+      {
+        name: 'Alfamart',
+        address:
+          'Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur',
+      },
+      {
+        name: 'Indomaret',
+        address:
+          'Jl. Raya Penataran, Nglegok 1, Nglegok, Kec. Nglegok, Kabupaten Blitar, Jawa Timur',
+      },
+    ],
   },
 });
 
