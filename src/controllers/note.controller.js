@@ -1,6 +1,6 @@
 const { Note } = require('#models/index.js');
 const { note: service } = require('#services/index.js');
-const { promiseResolver } = require('#utils/helpers.js');
+const { promiseResolver } = require('#utils/index.js');
 
 // const error = require('../types/error-code.js');
 

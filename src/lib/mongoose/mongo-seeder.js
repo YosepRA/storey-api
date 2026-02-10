@@ -5,7 +5,7 @@ const _ = require('lodash');
 
 const { Product, Note } = require('#models/index.js');
 const { mongoUrl } = require('#config/index.js');
-const { promiseResolver } = require('#utils/helpers.js');
+const { promiseResolver } = require('#utils/index.js');
 const mongoConnect = require('./mongo-connect.js');
 
 faker.seed(42);

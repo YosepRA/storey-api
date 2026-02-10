@@ -1,7 +1,5 @@
 const { Product } = require('#models/index.js');
-const { promiseResolver } = require('#utils/helpers.js');
-
-// const error = require('../types/error-code.js');
+const { promiseResolver } = require('#utils/index.js');
 
 module.exports = {
   async index(req, res) {

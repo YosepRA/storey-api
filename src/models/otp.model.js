@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const { expirationDate } = require('#utils/helpers.js');
+const { expirationDate } = require('#utils/index.js');
 
 const { Schema, model } = mongoose;
 

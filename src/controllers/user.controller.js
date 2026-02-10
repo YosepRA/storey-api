@@ -3,10 +3,7 @@ const {
 } = require('mongoose');
 
 const { User } = require('#models/index.js');
-const {
-  promiseResolver,
-  buildArraySetOperation,
-} = require('#utils/helpers.js');
+const { promiseResolver, buildArraySetOperation } = require('#utils/index.js');
 
 module.exports = {
   async register(req, res) {
