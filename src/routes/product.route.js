@@ -1,6 +1,9 @@
 const express = require('express');
 
-const { user: userMiddleware } = require('#middlewares/index.js');
+const {
+  user: userMiddleware,
+  validateObjectId,
+} = require('#middlewares/index.js');
 const { product: controller } = require('#controllers/index.js');
 
 const router = express.Router();
@@ -13,15 +16,15 @@ router.use(userMiddleware.isLoggedIn);
 
 router.get('/', controller.index);
 
-router.get('/:id', controller.details);
+router.get('/:id', validateObjectId('id'), controller.details);
 
 router.post('/', controller.create);
 
-router.patch('/:id', controller.update);
+router.patch('/:id', validateObjectId('id'), controller.update);
 
-router.patch('/:id/price', controller.updatePrice);
+router.patch('/:id/price', validateObjectId('id'), controller.updatePrice);
 
-router.delete('/:id', controller.delete);
+router.delete('/:id', validateObjectId('id'), controller.delete);
 
 // router.post('/image', controller.uploadImage);
 

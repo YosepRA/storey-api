@@ -1,6 +1,9 @@
 const express = require('express');
 
-const { user: userMiddleware } = require('#middlewares/index.js');
+const {
+  user: userMiddleware,
+  validateObjectId,
+} = require('#middlewares/index.js');
 const { note: controller } = require('#controllers/index.js');
 
 const router = express.Router();
@@ -13,12 +16,12 @@ router.use(userMiddleware.isLoggedIn);
 
 router.get('/', controller.index);
 
-router.get('/:id', controller.details);
+router.get('/:id', validateObjectId('id'), controller.details);
 
 router.post('/', controller.create);
 
-router.put('/:id', controller.update);
+router.put('/:id', validateObjectId('id'), controller.update);
 
-router.delete('/:id', controller.delete);
+router.delete('/:id', validateObjectId('id'), controller.delete);
 
 module.exports = router;

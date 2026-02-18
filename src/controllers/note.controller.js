@@ -2,22 +2,35 @@ const { Note } = require('#models/index.js');
 const { note: service } = require('#services/index.js');
 const { promiseResolver } = require('#utils/index.js');
 
-// const error = require('../types/error-code.js');
+function createProductSnapshot(products) {
+  return products.map(({ product, qty, subtotal }) => ({
+    originalId: product._id,
+    name: product.name,
+    price: product.price,
+    netto: product.netto,
+    pricePerUnit: product.pricePerUnit,
+    unit: product.unit,
+    qty,
+    subtotal,
+    store: product.store,
+    createdAt: new Date(),
+  }));
+}
 
 module.exports = {
   async index(req, res) {
-    const { page, sort } = req.query;
+    const { page, limit, sort } = req.query;
     const { _id: userId } = req.user;
-    const limit = 15;
+
     const query = { author: userId };
+    const pageOption = page ? parseInt(page, 10) : 1;
+    const limitOption = limit ? parseInt(limit, 10) : 10;
+    const sortOption = sort || '-createdAt';
+
     const options = {
-      page,
-      sort,
-      limit,
-      populate: {
-        path: 'products',
-        populate: 'product',
-      },
+      page: pageOption,
+      sort: sortOption,
+      limit: limitOption,
     };
 
     const [notes, queryError] = await promiseResolver(
@@ -25,22 +38,20 @@ module.exports = {
     );
 
     if (queryError) {
-      console.log(queryError);
-      return res.json({
+      return res.status(500).json({
         status: 'error',
-        // code: error.serverError.code,
-        // message: error.serverError.message,
+        message: `Note index query error: ${queryError.message}`,
       });
     }
 
     return res.json({
       status: 'ok',
-      page,
-      length: notes.docs.length,
-      total: notes.totalDocs,
-      hasPrevPage: notes.hasPrevPage,
-      hasNextPage: notes.hasNextPage,
-      data: notes.docs,
+      data: {
+        docs: notes.docs,
+        page: notes.page,
+        limit: notes.limit,
+        totalDocs: notes.totalDocs,
+      },
     });
   },
   async details(req, res) {
@@ -49,19 +60,16 @@ module.exports = {
     const [note, queryError] = await promiseResolver(Note.findById(id));
 
     if (queryError) {
-      console.log(queryError);
-      return res.json({
+      return res.status(500).json({
         status: 'error',
-        // code: error.serverError.code,
-        // message: error.serverError.message,
+        message: `Note details query error: ${queryError.message}`,
       });
     }
 
     if (note === null) {
-      return res.json({
+      return res.status(404).json({
         status: 'error',
-        // code: error.noDataFound.code,
-        // message: error.noDataFound.message,
+        message: 'Note not found.',
       });
     }
 
@@ -71,31 +79,46 @@ module.exports = {
     });
   },
   async create(req, res) {
-    const data = req.body;
-    const { _id: userId } = req.user;
+    const {
+      body: data,
+      user: { _id: userId },
+    } = req;
 
-    data.author = userId;
+    /* 
+      1. Create product snapshot from raw products array
+      2. Construct new input object from original body, product snapshot, and total price
+      3. Add author to input data
+    */
 
-    if (!data.price) {
-      const price = await service.calculateNotePrice(data.products, res);
+    // data.author = userId;
 
-      data.price = price;
-    }
+    // if (!data.price) {
+    //   const price = await service.calculateNotePrice(data.products, res);
 
-    const [note, createError] = await promiseResolver(Note.create(data));
+    //   data.price = price;
+    // }
+
+    const productSnapshots = createProductSnapshot(data.products);
+    const noteInput = {
+      title: data.title,
+      description: data.description || '',
+      products: productSnapshots,
+      totalPrice: data.totalPrice,
+      author: userId,
+    };
+
+    const [result, createError] = await promiseResolver(Note.create(noteInput));
 
     if (createError) {
-      console.log(createError);
-      return res.json({
+      return res.status(500).json({
         status: 'error',
-        // code: error.serverError.code,
-        // message: error.serverError.message,
+        message: `Note create error: ${createError.message}`,
       });
     }
 
-    return res.json({
+    return res.status(201).json({
       status: 'ok',
-      data: note,
+      data: result,
     });
   },
   async update(req, res) {

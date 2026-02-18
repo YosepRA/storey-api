@@ -29,7 +29,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '../../components/schemas.yaml#/components/schemas/NoteInput'
+              $ref: '../../components/schemas.yaml#/components/schemas/NoteUpdateInput'
       responses:
         '200':
           description: Successful note edit. Returns the edited note.
@@ -42,6 +42,38 @@ paths:
                     $ref: '../../components/schemas.yaml#/components/schemas/ResponseStatus'
                   data:
                     $ref: '../../components/schemas.yaml#/components/schemas/Note'
+        '400':
+          description: Invalid note ID.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Invalid ID.
+        '404':
+          description: Note not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Note not found.
+        '500':
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '../../components/schemas.yaml#/components/schemas/ServerError'
     delete:
       summary: Delete a note.
       tags:
@@ -49,3 +81,4 @@ paths:
       responses:
         '204':
           description: Successful note deletion.
+

@@ -7,4 +7,4 @@ async function promiseResolver(promise) {
   }
 }
 
-module.exports = promiseResolver();
+module.exports = promiseResolver;

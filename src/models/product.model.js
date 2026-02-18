@@ -12,19 +12,25 @@ const productSchema = new Schema({
       url: String,
     },
   ],
-  categories: [{ name: String }],
+  categories: [{ _id: Schema.Types.ObjectId, name: String }],
   price: { type: Number, required: true },
   netto: { type: Number, required: true },
-  unit: { name: String, abbreviation: String },
+  unit: { _id: Schema.Types.ObjectId, name: String, abbreviation: String },
   pricePerUnit: { type: Number, required: true }, // Calculate on client-side.
-  store: { name: String, address: String }, // Also add to user's store list.
+  store: { _id: Schema.Types.ObjectId, name: String, address: String }, // Also add to user's store list.
   pinned: { type: Boolean, default: false }, // Default to false.
   author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  createdAt: Date,
-  lastUpdatedAt: Date,
+  createdAt: { type: Date, default: Date.now },
+  lastUpdatedAt: { type: Date, default: Date.now },
 });
 
 productSchema.plugin(mongoosePaginate);
+
+productSchema.pre('findOneAndUpdate', function lastUpdatedAtPreHook(next) {
+  this.set({ lastUpdatedAt: new Date() });
+
+  next();
+});
 
 const Product = model('Product', productSchema);
 
