@@ -20,7 +20,7 @@ router.get('/:id', validateObjectId('id'), controller.details);
 
 router.post('/', controller.create);
 
-router.put('/:id', validateObjectId('id'), controller.update);
+router.patch('/:id', validateObjectId('id'), controller.update);
 
 router.delete('/:id', validateObjectId('id'), controller.delete);
 

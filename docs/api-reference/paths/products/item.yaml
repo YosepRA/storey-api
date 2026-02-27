@@ -48,17 +48,8 @@ paths:
       tags:
         - Product
       responses:
-        '200':
-          description: Returns the deleted product.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    $ref: ../../components/schemas.yaml#/components/schemas/ResponseStatus
-                  data:
-                    $ref: '../../components/schemas.yaml#/components/schemas/Product'
+        '204':
+          description: Successful product deletion.
 
   /products/{id}/price:
     patch:

@@ -86,8 +86,10 @@ module.exports = {
     const { id } = req.params;
     const data = req.body;
 
+    const updateOptions = { new: true };
+
     const [product, updateError] = await promiseResolver(
-      Product.findByIdAndUpdate(id, data, { new: true }),
+      Product.findByIdAndUpdate(id, data, updateOptions),
     );
 
     if (updateError) {
@@ -175,10 +177,7 @@ module.exports = {
       });
     }
 
-    return res.json({
-      status: 'ok',
-      data: deletedProduct,
-    });
+    return res.sendStatus(204);
   },
   // uploadImage(req, res) {
   //   res.send('Product image upload.');

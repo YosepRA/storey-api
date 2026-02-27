@@ -1,5 +1,4 @@
 const { Note } = require('#models/index.js');
-const { note: service } = require('#services/index.js');
 const { promiseResolver } = require('#utils/index.js');
 
 function createProductSnapshot(products) {
@@ -15,6 +14,10 @@ function createProductSnapshot(products) {
     store: product.store,
     createdAt: new Date(),
   }));
+}
+
+function calculateNoteTotalPrice(productSnapshots) {
+  return productSnapshots.reduce((acc, product) => acc + product.subtotal, 0);
 }
 
 module.exports = {
@@ -90,20 +93,12 @@ module.exports = {
       3. Add author to input data
     */
 
-    // data.author = userId;
-
-    // if (!data.price) {
-    //   const price = await service.calculateNotePrice(data.products, res);
-
-    //   data.price = price;
-    // }
-
     const productSnapshots = createProductSnapshot(data.products);
     const noteInput = {
       title: data.title,
       description: data.description || '',
       products: productSnapshots,
-      totalPrice: data.totalPrice,
+      totalPrice: calculateNoteTotalPrice(productSnapshots),
       author: userId,
     };
 
@@ -122,40 +117,56 @@ module.exports = {
     });
   },
   async update(req, res) {
+    /* 
+      1. Get remaining old product and new products.
+      2. Create product snapshots for the new products.
+      3. Merge old product snapshots with the new ones.
+      4. Build update object alongside other update fields other than the products.
+      5. Send update query to the database.
+    */
+
     const { id } = req.params;
-    const data = req.body;
+    const { remainingOldProducts, newProducts, ...noteUpdateRest } = req.body;
 
-    // If user is updating the product list and there is no price.
-    // Then recalculate price.
-    if (data.products && !data.price) {
-      const price = await service.calculateNotePrice(data.products, res);
+    let products;
 
-      data.price = price;
+    if (remainingOldProducts || newProducts) {
+      const newProductSnapshots =
+        newProducts?.length > 0 ? createProductSnapshot(newProducts) : [];
+
+      products = remainingOldProducts
+        ? remainingOldProducts.concat(newProductSnapshots)
+        : newProductSnapshots;
     }
 
-    const [oldNote, updateError] = await promiseResolver(
-      Note.findByIdAndUpdate(id, data),
+    const totalPrice = products ? calculateNoteTotalPrice(products) : undefined;
+
+    const update = { ...noteUpdateRest, products, totalPrice };
+    const updateOptions = { new: true };
+
+    const [note, updateError] = await promiseResolver(
+      Note.findByIdAndUpdate(id, update, updateOptions),
     );
 
     if (updateError) {
       console.log(updateError);
-      return res.json({
+
+      return res.status(500).json({
         status: 'error',
-        // code: error.serverError.code,
-        // message: error.serverError.message,
+        message: `Note update error: ${updateError.message}`,
       });
     }
 
-    if (oldNote === null) {
-      return res.json({
+    if (note === null) {
+      return res.status(404).json({
         status: 'error',
-        // code: error.noDataFound.code,
-        // message: error.noDataFound.message,
+        message: 'Note not found.',
       });
     }
 
     return res.json({
       status: 'ok',
+      data: note,
     });
   },
   async delete(req, res) {
@@ -165,8 +176,20 @@ module.exports = {
       Note.findByIdAndDelete(id),
     );
 
-    return res.json({
-      status: 'ok',
-    });
+    if (deleteError) {
+      return res.status(500).json({
+        status: 'error',
+        message: `Note delete error: ${deleteError.message}`,
+      });
+    }
+
+    if (deletedNote === null) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Note not found.',
+      });
+    }
+
+    return res.sendStatus(204);
   },
 };

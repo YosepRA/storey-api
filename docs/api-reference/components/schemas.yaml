@@ -390,13 +390,9 @@ components:
               subtotal:
                 type: number
                 format: float
-        totalPrice:
-          type: number
-          format: float
       required:
         - title
         - products
-        - totalPrice
       example:
         title: Saturday Night
         description: >
@@ -491,7 +487,6 @@ components:
               lastUpdatedAt: 2025-09-12T03:57:00.600Z
             qty: 1
             subtotal: 297990
-        totalPrice: 414740
     NoteUpdateInput:
       type: object
       properties:
@@ -515,9 +510,6 @@ components:
               subtotal:
                 type: number
                 format: float
-        totalPrice:
-          type: number
-          format: float
       example:
         title: Saturday Night
         description: >
@@ -589,7 +581,6 @@ components:
               lastUpdatedAt: 2025-09-12T03:57:00.600Z
             qty: 1
             subtotal: 297990
-        totalPrice: 414740
 
     ### ======================== Users ======================== ###
 
